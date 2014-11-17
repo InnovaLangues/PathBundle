@@ -1,0 +1,49 @@
+<div class="modal-header">
+    <h4 class="modal-title">
+        <span class="fa fa-folder-open"></span>
+        {{ 'template_edit_title' | trans:{}:'path_editor' }} :
+        {{ 'template_resources_title' | trans:{}:'path_editor' }}
+    </h4>
+</div>
+
+<div class="modal-body">
+    <form name="templateResourcesForm" role="form">
+        <fieldset>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="manageResources" ng-model="manageResources" value="keep" />
+                    <strong>Conserver les ressources</strong>
+                </label>
+            </div>
+
+            <p class="help-block">Utilise les même ressources que le Parcours original.</p>
+
+            <br/>
+
+            <div class="radio">
+                <label>
+                    <input type="radio" name="manageResources" ng-model="manageResources" value="duplicate" />
+                    <strong>Dupliquer les ressources</strong>
+                </label>
+            </div>
+
+            <p class="help-block">Utilise des copies des ressources du Parcours original.</p>
+
+            <br/>
+
+            <div class="radio">
+                <label>
+                    <input type="radio" name="manageResources" ng-model="manageResources" value="remove" />
+                    <strong>Supprimer les ressources</strong>
+                </label>
+            </div>
+
+            <p class="help-block">Ne conserve pas les ressources utilisées dans le Parcours original.</p>
+        </fieldset>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="paste()">{{ 'template_paste' | trans:{}:'path_editor' }}</button>
+    <button class="btn btn-default cancel" ng-click="cancel()">{{ 'cancel' | trans:{}:'path_editor' }}</button>
+</div>

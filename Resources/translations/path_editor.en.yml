@@ -94,7 +94,8 @@ template_name: Name
 template_description: Description
 template_save: Save template
 template_edit_title: Template
-template_save_resources: Keep linked resources
+template_resources_title: Manage linked resources
+template_paste: Paste template
 
 # u
 undo: Undo

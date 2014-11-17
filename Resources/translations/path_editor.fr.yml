@@ -96,7 +96,8 @@ template_name: Nom
 template_description: Description
 template_save: Sauvegarder le modèle
 template_edit_title: Modèle
-template_save_resources: Conserver les ressources liées
+template_resources_title: Gestion des ressources liées
+template_paste: Coller le modèle
 
 # u
 undo: Annuler

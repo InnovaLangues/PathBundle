@@ -102,7 +102,15 @@ class EditorController {
      * @param \Claroline\CoreBundle\Manager\ResourceManager $resourceManager
      */
     public function __construct(
-    ObjectManager $objectManager, RouterInterface $router, FormFactoryInterface $formFactory, SessionInterface $session, TranslatorInterface $translator, PathHandler $pathHandler, PathManager $pathManager, ResourceManager $resourceManager) {
+        ObjectManager $objectManager,
+        RouterInterface $router,
+        FormFactoryInterface $formFactory,
+        SessionInterface $session,
+        TranslatorInterface $translator,
+        PathHandler $pathHandler,
+        PathManager $pathManager,
+        ResourceManager $resourceManager)
+    {
         $this->om = $objectManager;
         $this->router = $router;
         $this->formFactory = $formFactory;
@@ -123,7 +131,8 @@ class EditorController {
      * @Method({"GET", "POST"})
      * @Template("InnovaPathBundle:Editor:main.html.twig")
      */
-    public function newAction(Workspace $workspace) {
+    public function newAction(Workspace $workspace)
+    {
         $path = Path::initialize();
         $this->pathManager->checkAccess('CREATE', $path, $workspace);
 
@@ -147,12 +156,13 @@ class EditorController {
      * @ParamConverter("template", class="InnovaPathBundle:Path\PathTemplate", options={"mapping": {"templateId": "id"}})
      * @Template("InnovaPathBundle:Editor:main.html.twig")
      */
-    public function newFromModelAction(Workspace $workspace, PathTemplate $template) {
+    public function newFromModelAction(Workspace $workspace, PathTemplate $template)
+    {
         $path = new Path();
         
         $this->pathManager->checkAccess('CREATE', $path, $workspace);
         
-        $path->setName($template->getName());       
+        $path->setName($template->getName());
         $path->setDescription($template->getDescription());
         
         $structureArray = array(json_decode($template->getStructure()));
@@ -172,7 +182,8 @@ class EditorController {
      * @Method({"GET", "PUT"})
      * @Template("InnovaPathBundle:Editor:main.html.twig")
      */
-    public function editAction(Workspace $workspace, Path $path) {
+    public function editAction(Workspace $workspace, Path $path)
+    {
         $this->pathManager->checkAccess('EDIT', $path);
 
         return $this->renderEditor($workspace, $path, 'PUT');
@@ -185,7 +196,8 @@ class EditorController {
      * @param  string $httpMethod
      * @return array|RedirectResponse
      */
-    protected function renderEditor(Workspace $workspace, Path $path, $httpMethod = null) {
+    protected function renderEditor(Workspace $workspace, Path $path, $httpMethod = null)
+    {
         $params = array();
         if (!empty($httpMethod)) {
             $params['method'] = $httpMethod;
@@ -194,7 +206,10 @@ class EditorController {
         $form = $this->formFactory->create('innova_path', $path, $params);
 
         // Add save and close flag to form
-        $form->add('saveAndClose', 'hidden', array('mapped' => false));
+        $form->add('saveAndClose', 'hidden', array ('mapped' => false));
+
+        // Add duplicate resources flag to form
+        $form->add('duplicateResources', 'hidden', array ('mapped' => false));
 
         // Try to process data
         $this->pathHandler->setForm($form);
@@ -206,6 +221,13 @@ class EditorController {
 
             $saveAndClose = $form->get('saveAndClose')->getData();
             $saveAndClose = filter_var($saveAndClose, FILTER_VALIDATE_BOOLEAN);
+
+            $duplicateResources = $form->get('duplicateResources')->getData();
+            $duplicateResources = filter_var($duplicateResources, FILTER_VALIDATE_BOOLEAN);
+
+            if ($duplicateResources) {
+
+            }
 
             if (!$saveAndClose) {
                 // Redirect to editor
@@ -252,7 +274,8 @@ class EditorController {
      * )
      * @Method("GET")
      */
-    public function loadActivityAction($nodeId) {
+    public function loadActivityAction($nodeId)
+    {
         $activity = array();
 
         $node = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($nodeId);
@@ -328,7 +351,8 @@ class EditorController {
      * )
      * @Method("GET")
      */
-    public function showActivityAction($activityId) {
+    public function showActivityAction($activityId)
+    {
         // Retrieve node from Activity id
         $activity = $this->om->getRepository('ClarolineCoreBundle:Resource\Activity')->findOneById($activityId);
         if (empty($activity)) {
@@ -339,5 +363,4 @@ class EditorController {
 
         return new RedirectResponse($route);
     }
-
 }

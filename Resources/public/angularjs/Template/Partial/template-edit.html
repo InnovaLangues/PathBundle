@@ -18,17 +18,8 @@
                 <textarea class="form-control" name="template-description" id="template-description" cols="30" rows="4" data-ng-model="formTemplate.description"></textarea>
             </div>
 
-            <div class="col-md-12">
-                <label class="checkbox">
-                    <input type="checkbox" ng-model="formTemplate.withResources" />
-                    {{ 'template_save_resources' | trans:{}:'path_editor' }}
-                </label>
-            </div>
-
             <input type="hidden" ng-model="formTemplate.structure" name="template-step" />
         </fieldset>
-
-        <hr/>
 
         <div class="row">
             <div class="col-md-12">
