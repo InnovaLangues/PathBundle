@@ -58,4 +58,8 @@ $(document).ready(function () {
         var message = Translator.get('innova_tools:create_path_from_model') ;
         $('.path-from-model').html('<span class="fa fa-plus"></span> ' + message);
     });
+
+    $('.action-btn').on('click', function () {
+        $('.action-btn').attr("disabled", "true");
+    });
 });
