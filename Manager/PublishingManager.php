@@ -178,7 +178,7 @@ class PublishingManager
             } else {
                 // Step already exists => update it
                 $step = $existingSteps->get($stepStructure->resourceId);
-                $step = $this->stepManager->edit($this->path, $level, $parent, $currentOrder, $stepStructure, $step);
+                $step = $this->stepManager->edit($this->path, $level, $parent, $currentOrder, $stepStructure, $step, false);
             }
 
             // Manage resources inheritance
