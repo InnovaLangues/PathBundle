@@ -117,14 +117,14 @@
                         </td>
                         <td class="text-right">
                             {% if path.canEdit %}
-                            <a href="{{ path('innova_path_editor_edit', {workspaceId: workspace.id, id: path.entity.id}) }}" class="btn btn-xs btn-default">
+                            <a href="{{ path('innova_path_editor_edit', {workspaceId: workspace.id, id: path.entity.id}) }}" class="btn btn-xs btn-default action-btn">
                                 <span class="fa fa-pencil"></span>
                                 {{ 'edit' | trans({}, 'innova_tools') }}
                             </a>
                             {% endif %}
 
                             {% if (path.entity.modified or not path.entity.published) and path.canEdit %}
-                                <a href="{{ path('innova_path_publish', {workspaceId: workspace.id, id: path.entity.id}) }}" class="btn btn-xs btn-success">
+                                <a href="{{ path('innova_path_publish', {workspaceId: workspace.id, id: path.entity.id}) }}" class="btn btn-xs btn-success action-btn">
                                     <span class="fa fa-share-square-o"></span>
                                     {{ 'publish' | trans({}, 'innova_tools') }}
                                 </a>
