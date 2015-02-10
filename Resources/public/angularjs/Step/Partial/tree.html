@@ -16,7 +16,7 @@
     <!-- Step name -->
     <div class="step" data-nodrag="">
         <!--Collapse / Expand button -->
-        <a class="step-toggle" href="" data-ng-click="toggle(this)" data-ng-show="step.children" role="button">
+        <a class="step-toggle" href="" data-ng-click="toggle(this)" data-ng-show="step.children.length > 0" role="button">
             <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': collapsed, 'fa-caret-down': !collapsed }"></span>
         </a>
 
