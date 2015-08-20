@@ -23,7 +23,8 @@
         'PathModule',
         'StepModule',
         'TemplateModule',
-        'UserProgressionModule'
+        'UserProgressionModule',
+        'StepConditionsModule'
     ];
 
     // Resolve functions (it's the same between Editor and Player as we navigate in the same way in the 2 apps)
