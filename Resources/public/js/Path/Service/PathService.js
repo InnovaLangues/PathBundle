@@ -37,8 +37,40 @@
             var summary = {
                 opened: true
             };
+            /**
+             * list af all steps following the current step
+             * @type {Array}
+             */
+            var arrnextall = [];
 
             return {
+                /**
+                 * get list of all child steps of a step
+                 * @returns {array}
+                 */
+                getArrNextAll: function getArrNextAll(step) {
+                    //flush the array from previous call
+                    this.arrnextall = [];
+                    //call the recursive function
+                    this.getNextAll(step);
+                    return this.arrnextall;
+                },
+                /**
+                 * Get all the steps following a step
+                 * meaning : all children and parents next siblings
+                 * @param step
+                 */
+                getNextAll: function getNextAll(step) {
+                    if (angular.isDefined(step) && angular.isObject(step)) {
+                        //If this is not final step
+                        if (this.getNext(step)) {
+                            this.arrnextall.push(this.getNext(step));
+                            this.getNextAll(this.getNext(step));
+                        }
+                    }
+                    return true;
+                },
+
                 /**
                  * Get ID of the current Path
                  * @returns {Number}
