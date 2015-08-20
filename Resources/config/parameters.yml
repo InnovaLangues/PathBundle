@@ -5,6 +5,7 @@ parameters:
     innova_path.controller.path_player.class:      Innova\PathBundle\Controller\Wizard\PlayerController
     innova_path.controller.path_editor.class:      Innova\PathBundle\Controller\Wizard\EditorController
     innova_path.controller.user_progression.class: Innova\PathBundle\Controller\UserProgressionController
+    innova_path.controller.step_conditions.class:  Innova\PathBundle\Controller\StepConditionsController
 
     # Managers
     innova_path.manager.path.class:                Innova\PathBundle\Manager\PathManager
