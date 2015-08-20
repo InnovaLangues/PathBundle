@@ -3,6 +3,22 @@ cancel: Annuler
 close_summary: Fermer le sommaire
 copy: copie
 
+condition_access: Condition d'accès pour
+condition_condition_delete: Supprimer la condition
+condition_criterion_add : Ajouter un critère
+condition_criteria_group_add : Ajouter un groupe de critère
+condition_criteria_group_delete : Supprimer le groupe de critère
+condition_criterion_delete: Supprimer le critère
+condition_criterion_type_activityrepetition: Répétition de l'activité
+condition_criterion_type_activitystatus: Status de l'activité
+condition_criterion_type_usergroup: Groupe d'utilisateur
+condition_criterion_activityrepetition: Nombre de fois où l'activité a été effectuée
+condition_criterion_activitystatus: Statut de l'activité
+condition_criterion_usergroup: Utilisateur appartient au groupe
+condition_criterion_type: Type de critère
+condition_init_conditionstructure: Initialiser une condition pour l'accès à l'étape
+condition_no_conditionstructure : Aucune condition n'est définie pour l'étape
+
 # d
 delete_activity: Supprimer le lien avec l'activité
 delete_step: Supprimer l'étape

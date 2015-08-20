@@ -3,6 +3,22 @@ cancel: Cancel
 close_summary: Close summary
 copy: copy
 
+condition_access: Access condition for
+condition_condition_delete: Delete condition
+condition_criterion_add : Add a criterion
+condition_criteria_group_add : Add a criteria group
+condition_criteria_group_delete : Delete criteria group
+condition_criterion_delete: Supprimer criterion
+condition_criterion_type_activityrepetition: Activity repetition
+condition_criterion_type_activitystatus: Activity status
+condition_criterion_type_usergroup: User group
+condition_criterion_type: Criterion type
+condition_criterion_activityrepetition: Times the activity has been performed
+condition_criterion_activitystatus: The activity has status
+condition_criterion_usergroup: User belongs to the group
+condition_init_conditionstructure: Initialize a condition to access the step
+condition_no_conditionstructure : No condition is set for the step
+
 # d
 delete_activity: Delete activity link
 delete_step: Delete step
