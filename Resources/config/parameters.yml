@@ -12,6 +12,7 @@ parameters:
     innova_path.manager.publishing.class:          Innova\PathBundle\Manager\PublishingManager
     innova_path.manager.path_template.class:       Innova\PathBundle\Manager\PathTemplateManager
     innova_path.manager.step.class:                Innova\PathBundle\Manager\StepManager
+    innova_path.manager.stepconditions.class:      Innova\PathBundle\Manager\StepConditionsManager
     innova_path.manager.user_progression.class:    Innova\PathBundle\Manager\UserProgressionManager
     
     # Form types
