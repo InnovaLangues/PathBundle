@@ -134,4 +134,3 @@ class Criterion implements \JsonSerializable
         return $jsonArray;
     }
 }
-

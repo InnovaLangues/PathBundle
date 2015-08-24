@@ -250,5 +250,28 @@ class Criteriagroup implements \JsonSerializable
 
         return $jsonArray;
     }
-}
 
+    /**
+     * Add criterium
+     *
+     * @param \Innova\PathBundle\Entity\Criterion $criterium
+     *
+     * @return Criteriagroup
+     */
+    public function addCriterium(\Innova\PathBundle\Entity\Criterion $criterium)
+    {
+        $this->criteria[] = $criterium;
+
+        return $this;
+    }
+
+    /**
+     * Remove criterium
+     *
+     * @param \Innova\PathBundle\Entity\Criterion $criterium
+     */
+    public function removeCriterium(\Innova\PathBundle\Entity\Criterion $criterium)
+    {
+        $this->criteria->removeElement($criterium);
+    }
+}

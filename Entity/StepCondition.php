@@ -30,6 +30,14 @@ class StepCondition implements \JsonSerializable
     private $criteriagroups;
 
     /**
+     * Step the condition belongs to
+     * @var \Innova\PathBundle\Entity\Step
+     *
+     * @ORM\OneToOne(targetEntity="Innova\PathBundle\Entity\Step", inversedBy="condition")
+     */
+    protected $step;
+
+    /**
      * Class constructor
      */
     public function __construct()
@@ -110,6 +118,30 @@ class StepCondition implements \JsonSerializable
         return $root;
     }
 
+    /**
+     * Set step
+     *
+     * @param \Innova\PathBundle\Entity\Step $step
+     *
+     * @return StepCondition
+     */
+    public function setStep(\Innova\PathBundle\Entity\Step $step = null)
+    {
+        $this->step = $step;
+
+        return $this;
+    }
+
+    /**
+     * Get step
+     *
+     * @return \Innova\PathBundle\Entity\Step
+     */
+    public function getStep()
+    {
+        return $this->step;
+    }
+
     function jsonSerialize()
     {
         $criteriagroups = array ();
@@ -124,4 +156,3 @@ class StepCondition implements \JsonSerializable
         );
     }
 }
-
