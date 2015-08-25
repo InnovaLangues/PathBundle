@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 
+use Innova\PathBundle\Entity\StepCondition;
 /**
  * Step
  *
@@ -85,6 +86,14 @@ class Step implements \JsonSerializable
      * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Path\Path", inversedBy="steps")
      */
     protected $path;
+
+    /**
+     * Condition
+     * @var \Innova\PathBundle\Entity\StepCondition
+     *
+     * @ORM\OneToOne(targetEntity="Innova\PathBundle\Entity\StepCondition", mappedBy="step", cascade={"persist", "remove"})
+     */
+    protected $condition;
 
     /**
      * Inherited resources
@@ -454,6 +463,42 @@ class Step implements \JsonSerializable
         return $resources;
     }
 
+    /**
+     * Set condition
+     *
+     * @param \Innova\PathBundle\Entity\StepCondition $condition
+     *
+     * @return Step
+     */
+    public function setCondition(\Innova\PathBundle\Entity\StepCondition $condition = null)
+    {
+        $this->condition = $condition;
+
+        return $this;
+    }
+
+    /**
+     * Remove condition
+     * @param \Innova\PathBundle\Entity\StepCondition $condition
+     * @return \Innova\PathBundle\Entity\Step
+     */
+    public function removeCondition(StepCondition $condition)
+    {
+        $condition->setStep(null);
+
+        return $this;
+    }
+
+    /**
+     * Get condition
+     *
+     * @return \Innova\PathBundle\Entity\StepCondition
+     */
+    public function getCondition()
+    {
+        return $this->condition;
+    }
+
     public function jsonSerialize()
     {
         // Initialize data array
@@ -544,6 +589,12 @@ class Step implements \JsonSerializable
             if (!$exist) {
                 $jsonArray['excludedResources'][] = $resource->getId();
             }
+        }
+
+        // Get condition
+        if (!empty($this->condition)) {
+            // Get condition of the step
+            $jsonArray['condition'] = $this->condition;
         }
 
         // Get step children

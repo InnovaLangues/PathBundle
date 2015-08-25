@@ -26,7 +26,7 @@ class StepCondition implements \JsonSerializable
      * criteriagroups linked to the condition
      *
      * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\Criteriagroup", mappedBy="stepcondition", indexBy="id", cascade={"persist", "remove"})
-     * @ORM\OrderBy({"lvl" = "ASC", "order" = "ASC"})
+     * @ORM\OrderBy({"order" = "ASC"})
      */
     private $criteriagroups;
 
@@ -143,17 +143,22 @@ class StepCondition implements \JsonSerializable
         return $this->step;
     }
 
-    function jsonSerialize()
+    public function jsonSerialize()
     {
-        $criteriagroups = array ();
+        // Initialize data array
+        $jsonArray = array (
+            'id'                => $this->id,
+            'scid'              => $this->id,
+        );
 
+        $criteriagroups = array();
         $rootCriteriagroup = $this->getRootCriteriagroup();
         if (!empty($rootCriteriagroup)) {
             $criteriagroups[] = $rootCriteriagroup;
         }
 
-        return array (
-            'criteriagroups'       => $criteriagroups,
-        );
+        $jsonArray['criteriagroups'] = $criteriagroups;
+
+        return $jsonArray;
     }
 }

@@ -65,6 +65,14 @@ class Criteriagroup implements \JsonSerializable
     protected $criteria;
 
     /**
+     * Order of the criteriagroups relative to its siblings in the step
+     * @var integer
+     *
+     * @ORM\Column(name="criteriagroup_order", type="integer")
+     */
+    protected $order;
+
+    /**
      * Class constructor
      */
     public function __construct()
@@ -233,19 +241,44 @@ class Criteriagroup implements \JsonSerializable
         return $this->criteria;
     }
 
-    function jsonSerialize()
+    /**
+     * Set order
+     * @param  integer $order
+     * @return \Innova\PathBundle\Entity\Criteriagroup
+     */
+    public function setOrder($order)
+    {
+        $this->order = $order;
+
+        return $this;
+    }
+
+    /**
+     * Get order of the step
+     * @return integer
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    public function jsonSerialize()
     {
         // Initialize data array
         $jsonArray = array (
             'id'                => $this->id,               // A local ID for the criteriagroup in the condition
+            'cgid'              => $this->id,               // The real ID of the criteriagroup into the DB
             'lvl'               => $this->lvl,              // The depth of the criteriagroup in the condition structure
-            'children'          => array(),
-            'criterion'         => array(),                 //list of criteria attached to a criteriagroup
         );
 
-        // Get step children
+        // Get step criteriagroup
         if (!empty($this->children)) {
-            $jsonArray['children'] = array_values($this->children->toArray());
+            $jsonArray['criteriagroup'] = array_values($this->children->toArray());
+        }
+
+        // list of criteria attached to a criteriagroup
+        if (!empty($this->criteria)) {
+            $jsonArray['criterion'] = array_values($this->criteria->toArray());
         }
 
         return $jsonArray;
