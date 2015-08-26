@@ -17,8 +17,11 @@ var StepConditionsBaseCtrl = function StepConditionsBaseCtrl($route, $routeParam
         this.structure = path.steps;
     }
 
+    //force id if not set
+    if (typeof this.current.stepId == 'undefined'){this.current.stepId = this.structure[0].id}
     //Get the current step
     var step = this.pathService.getStep(this.current.stepId);
+
     //get the current condition
     this.conditionstructure = [];
     if (angular.isObject(step) && angular.isObject(step.condition)){
