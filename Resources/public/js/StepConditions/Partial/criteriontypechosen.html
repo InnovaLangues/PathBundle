@@ -5,7 +5,7 @@
         <select name="criterion-usergroup" id="criterion-usergroup"
                 data-ng-model="criterion.data"
                 data-ng-options="k as v for (k, v) in stepConditionsEditCtrl.criterionUsergroup">
-            <option></option>
+            <option value="">{{ 'condition_criterion_selectgroup'|trans:{}:'path_wizards' }}</option>
         </select>
     </div>
 </div>
@@ -13,15 +13,21 @@
 <div data-ng-switch-when="activitystatus">
     <label class="control-label col-md-3 required ng-binding">{{ 'condition_criterion_activitystatus'|trans:{}:'path_wizards' }} :</label>
     <div class="col-md-9 criterion-activitystatus">
+        <!--
         <select name="criterion-activitystatus" id="criterion-activitystatus"
                 data-ng-model="criterion.data">
-            <!-- values from AbstractEvaluation Entity -->
             <option>passed</option>
             <option>failed</option>
             <option>completed</option>
             <option>imcomplete</option>
             <option>not_attempted</option>
             <option>unknown</option>
+        </select>
+        -->
+        <select name="criterion-activitystatus" id="criterion-activitystatus"
+                data-ng-model="criterion.data"
+                data-ng-options="k as v for (k, v) in stepConditionsEditCtrl.criterionActivitystatuses">
+            <option value="">{{ 'condition_criterion_selectstatus'|trans:{}:'path_wizards' }}</option>
         </select>
     </div>
 </div>
