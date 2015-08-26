@@ -151,11 +151,17 @@ class StepConditionsController extends Controller
     /**
      * Get list of Evaluation statuses to display in select
      * (data from \CoreBundle\Entity\Activity\AbstractEvaluation.php)
-     *
+     * @Route(
+     *     "/activitystatuses",
+     *     name         = "innova_path_criteria_activitystatuses",
+     *     options      = { "expose" = true }
+     * )
+     * @Method("GET")
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function getEvaluationStatuses()
     {
+/*
         $statuses = array(
             AbstractEvaluation::STATUS_COMPLETED,
             AbstractEvaluation::STATUS_FAILED,
@@ -164,17 +170,18 @@ class StepConditionsController extends Controller
             AbstractEvaluation::STATUS_PASSED,
             AbstractEvaluation::STATUS_UNKNOWN
         );
-        /* also possible :
-        $r = new ReflectionClass('\CoreBundle\Entity\Activity\AbstractEvaluation');
+*/
+
+        $r = new \ReflectionClass('Claroline\CoreBundle\Entity\Activity\AbstractEvaluation');
         //Get class constants
         $const = $r->getConstants();
         $statuses = array();
         foreach($const as $k => $v) {
-            //Only get constants begining with STATUS
+            //Only get constants beginning with STATUS
             if (strpos($k, 'STATUS') !== false)
-                $statuses[$k] => $v;
+                $statuses[] = $v;
         }
-        */
+
         return new JsonResponse($statuses);
     }
 }

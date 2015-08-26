@@ -15,8 +15,8 @@ var StepConditionsEditCtrl = function StepConditionsEditCtrl($route, $routeParam
     this.pathService            = PathService;
 
     //TODO : ---JUST FOR TEST ---
-    this.stepConditionsService.getEvaluationFromController(6);
-console.log("this.stepConditionsService.getEvaluationFromController");console.log(this.evaluation);
+//    this.stepConditionsService.getEvaluationFromController(6);
+//console.log("this.stepConditionsService.getEvaluationFromController");console.log(this.evaluation);
 
     //TODO : put this at path level to avoid reload
     this.useringroup = this.stepConditionsService.getUseringroupFromController();
@@ -27,6 +27,11 @@ console.log("this.stepConditionsService.getEvaluationFromController");console.lo
     //values for user group list
     this.criterionUsergroup = this.stepConditionsService.getUsergroupListFromController();
 //console.log("this.stepConditionsService.getUsergroupListFromController()");console.log(this.criterionUsergroup);
+
+    //TODO : put this at path level to avoid reload (maybe hardcode the list for better performance...)
+    //values for activity statuses
+    this.criterionActivitystatuses = this.stepConditionsService.getStatusesListFromController();
+//console.log("criterionActivitystatuses");console.log(this.criterionActivitystatuses);
 
     this.criterionActivitystatus = 'passed';
     this.criterionActivityrepetition = 1;

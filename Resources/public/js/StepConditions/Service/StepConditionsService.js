@@ -14,6 +14,7 @@
              * @type {array}
              */
             var usergrouplist = null;
+            var statuseslist = null;
             var useringroup = null;
             /**
              * Evaluation data from \CoreBundle\Entity\Activity\Evaluation
@@ -28,15 +29,10 @@
             var StepConditions = function StepConditions() {
                 // Initialize step properties
                 this.id                = IdentifierService.generateUUID();
-                //the step the conditions belongs to (not useful if condition structure saved into path structure JSON: it will be at the step level)
+                //id of the stepcondition in entity
                 this.scid              = null;
-                // this.step              = step;
                 //list of criteria group
-                this.criteriagroups     = [];
-                //result of the evaluation of the condition
-                //this.evaluation        = true;
-                // ???
-                //this.propagateToChildren = true;
+                this.criteriagroups    = [];
             };
 
             /**
@@ -47,6 +43,7 @@
             var Criterion = function Criterion() {
                 // criteria group identifier
                 this.id                  = IdentifierService.generateUUID();
+                //id of the criterion in entity
                 this.critid              = null;
                 //type : activity status, user group, primary resource repeat
                 this.type                = null;
@@ -66,6 +63,7 @@
                 }
                 // criteria group identifier
                 this.id = IdentifierService.generateUUID();
+                //id of the criteriagroup in entity
                 this.cgid = null;
                 this.lvl = lvl;
                 //contains array of criterion and/or criteria group
@@ -103,6 +101,18 @@
                     this.usergrouplist = ugl;
                 },
                 /**
+                 * Retrieve activity statuses list from DB
+                 *
+                 * @returns {*|statuseslist}
+                 */
+                getStatusesListFromController: function getStatusesListFromController(){
+                    this.getEvaluationStatuses();
+                    return this.statuseslist;
+                },
+                setStatusesList: function setStatusesList(sl) {
+                    this.statuseslist = sl;
+                },
+                /**
                  * Retrieve usergroup list from DB
                  *
                  * @returns {*|usergrouplist}
@@ -115,7 +125,7 @@
                     this.useringroup = uig;
                 },
                 /**
-                 * Retrieve the groups in which the user is registered
+                 * Retrieve the groups in which the user is registered to
                  *
                  */
                 getUserBelongsTo: function getUserBelongsTo() {
@@ -166,6 +176,26 @@
                     //adds the criterion to the criteriagroup
                     cgroup.criterion.push(newCriterion);
                     return newCriterion;
+                },
+                /**
+                 * Retrieve the list of statuses for activity
+                 *
+                 * @returns {*}
+                 */
+                getEvaluationStatuses: function getEvaluationStatuses() {
+                    var deferred = $q.defer();
+                    var params = {};
+                    $http
+                        .get(Routing.generate('innova_path_criteria_activitystatuses', params))
+                        .success(function (response) {
+                            this.setStatusesList(response);
+                            deferred.resolve(response);
+                        }
+                            .bind(this)) //to access StepConditionsService object method and attributes
+                        .error(function (response) {
+                            deferred.reject(response);
+                        });
+                    return deferred.promise;
                 },
                 /**
                  * Get the list of User groups
@@ -283,17 +313,17 @@ console.log("Inside testCriteriagroup(criteriagroup), for j = "+j+ " result : ")
                     if (evaluationResultToCheck !== null && evaluationResultToCheck.status !== 'NA'){
                         switch (criterion.type) {
                             case "activityrepetition":
-                                test = criterion.data === evaluationResultToCheck.attempts;
+                                test = (criterion.data === evaluationResultToCheck.attempts);
 console.log('activityrepetition '+criterion.data);
 //test = true;
                                 break;
                             case "activitystatus":
-                                test = criterion.data === evaluationResultToCheck.status;
+                                test = (criterion.data === evaluationResultToCheck.status);
 console.log('activitystatus '+criterion.data);
 //test = false;
                                 break;
                             case "usergroup":
-                                test = criterion.data === this.useringroup;
+                                test = (criterion.data === this.useringroup);
 console.log('usergroup '+criterion.data);
                                 break;
                             default:
