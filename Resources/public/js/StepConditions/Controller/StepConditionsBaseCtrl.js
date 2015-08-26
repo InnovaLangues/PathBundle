@@ -19,9 +19,10 @@ var StepConditionsBaseCtrl = function StepConditionsBaseCtrl($route, $routeParam
 
     //Get the current step
     var step = this.pathService.getStep(this.current.stepId);
-    if (angular.isObject(step)) {
-        //get the current condition
-        this.conditionstructure = (step.condition) ? [step.condition] : [];
+    //get the current condition
+    this.conditionstructure = [];
+    if (angular.isObject(step) && angular.isObject(step.condition)){
+        this.conditionstructure = [step.condition];
     }
 
     return this;

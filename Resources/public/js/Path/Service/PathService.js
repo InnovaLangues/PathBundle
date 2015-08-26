@@ -56,29 +56,12 @@
                     return this.arrnextall;
                 },
                 /**
-                 * Get all the steps following a step
-                 * meaning : all children and parents next siblings
-                 * @param step
-                 */
-                getNextAll: function getNextAll(step) {
-                    if (angular.isDefined(step) && angular.isObject(step)) {
-                        //If this is not final step
-                        if (this.getNext(step)) {
-                            this.arrnextall.push(this.getNext(step));
-                            this.getNextAll(this.getNext(step));
-                        }
-                    }
-                    return true;
-                },
-
-                /**
                  * Get ID of the current Path
                  * @returns {Number}
                  */
                 getId: function getId() {
                     return id;
                 },
-
                 /**
                  * Set ID of the current Path
                  * @param value
@@ -311,7 +294,23 @@
 
                     return next;
                 },
-
+                /**
+                 * Get all the steps following a step
+                 * meaning : all children and parents next siblings
+                 * @param step
+                 */
+                getNextAll: function getNextAll(step) {
+                    if (angular.isDefined(step) && angular.isObject(step)) {
+                        //If this is not final step
+                        if (this.getNext(step)) {
+                            this.arrnextall.push(this.getNext(step));
+                            this.getNextAll(this.getNext(step));
+                        } else {
+                            this.arrnextall.push(step);
+                        }
+                    }
+                    return true;
+                },
                 /**
                  * Retrieve the next sibling of an element
                  * @param step
@@ -421,13 +420,13 @@
                                 terminated = recursiveLoop(currentStep, currentStep.children[i]);
                             }
                         }
-
                         return terminated;
                     }
 
                     if (typeof steps !== 'undefined' && steps.length !== 0) {
                         for (var j = 0; j < steps.length; j++) {
                             var terminated = recursiveLoop(null, steps[j]);
+
                             if (terminated) {
                                 break;
                             }
@@ -487,7 +486,6 @@
                                 }
                             }
                         }
-
                         return deleted;
                     });
                 },

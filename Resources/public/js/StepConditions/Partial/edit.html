@@ -9,12 +9,11 @@
             <span class="fa fa-plus"></span>
             <span>{{ 'condition_criteria_group_add'|trans:{}:'path_wizards' }}</span>
         </button>
--->
-        <button type="button" data-ng-click="stepConditionsEditCtrl.addCriterion(stepConditionsEditCtrl.conditionstructure[0])" class="btn btn-sm btn-primary">
+        <button type="button" data-ng-click="stepConditionsEditCtrl.addCriterion(stepConditionsEditCtrl.conditionstructure)" class="btn btn-sm btn-primary">
             <span class="fa fa-plus"></span>
             <span>{{ 'condition_criterion_add'|trans:{}:'path_wizards' }}</span>
         </button>
-
+-->
         <button type="button" data-ng-click="stepConditionsEditCtrl.deleteCondition(stepConditionsEditCtrl.current.stepId)" class="btn btn-sm btn-danger text-right" >
             <span class="fa fa-trash"></span>
             <span>{{ 'condition_condition_delete'|trans:{}:'path_wizards' }}</span>
@@ -24,10 +23,10 @@
 
     <div data-ps-class="step-conditions-container" data-ps-push-class="step-conditions-opened">
         <div class="step-conditions">
+            <br>current : {{stepConditionsEditCtrl.current}}
             <!-- Block to display where there is no condition structure -->
             <div data-ng-if="stepConditionsEditCtrl.conditionstructure.length === 0" class="text-center">
                 <em>{{ 'condition_no_conditionstructure'|trans:{}:'path_wizards' }}</em>
-<br>current : {{stepConditionsEditCtrl.current}}
                 <div class="text-center col-md-12">
                     <button type="button" role="button" class="btn btn-sm btn-primary" data-ng-click="stepConditionsEditCtrl.createCondition(stepConditionsEditCtrl.current.stepId)">
                         <span class="fa fa-fw fa-pencil"></span>

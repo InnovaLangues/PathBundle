@@ -16,8 +16,17 @@ condition_criterion_activityrepetition: Nombre de fois où l'activité a été e
 condition_criterion_activitystatus: Statut de l'activité
 condition_criterion_usergroup: Utilisateur appartient au groupe
 condition_criterion_type: Type de critère
+condition_delete_title: Suppression de la condition
+condition_delete_confirm: Attention, vous êtes sur le point de supprimer la condition. Sans condition, tous les utilisateurs pourront passer à l'étape suivante
+condition_delete: Supprimer
 condition_init_conditionstructure: Initialiser une condition pour l'accès à l'étape
-condition_no_conditionstructure : Aucune condition n'est définie pour l'étape
+condition_no_conditionstructure: Aucune condition n'est définie pour l'étape
+criteriagroup_delete_title: Suppression du groupe de critère
+criteriagroup_delete_confirm: Souhaitez-vous vraiment supprimer ce groupe de critères ? Cela supprimera tous les critères de ce groupe et les groupes de critères enfants
+criteriagroup_delete: Supprimer
+criterion_delete_title: Suppression du critère
+criterion_delete_confirm: Souhaitez-vous vraiment supprimer ce critère ?
+criterion_delete: Supprimer
 
 # d
 delete_activity: Supprimer le lien avec l'activité

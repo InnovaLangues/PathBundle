@@ -14,19 +14,19 @@ var StepConditionsEditCtrl = function StepConditionsEditCtrl($route, $routeParam
     this.stepConditionsService  = StepConditionsService;
     this.pathService            = PathService;
 
-    //TODO : put this at path level to avoid reload
-    this.useringroup = this.stepConditionsService.getUseringroupFromController();
-console.log("this.stepConditionsService.getUseringroupFromController()");console.log(this.useringroup);
-
     //TODO : ---JUST FOR TEST ---
     this.stepConditionsService.getEvaluationFromController(6);
 console.log("this.stepConditionsService.getEvaluationFromController");console.log(this.evaluation);
 
     //TODO : put this at path level to avoid reload
+    this.useringroup = this.stepConditionsService.getUseringroupFromController();
+//console.log("this.stepConditionsService.getUseringroupFromController()");console.log(this.useringroup);
+
+    //TODO : put this at path level to avoid reload
     //default values for conditions
     //values for user group list
     this.criterionUsergroup = this.stepConditionsService.getUsergroupListFromController();
-console.log("this.stepConditionsService.getUsergroupListFromController()");console.log(this.criterionUsergroup);
+//console.log("this.stepConditionsService.getUsergroupListFromController()");console.log(this.criterionUsergroup);
 
     this.criterionActivitystatus = 'passed';
     this.criterionActivityrepetition = 1;
@@ -88,16 +88,28 @@ StepConditionsEditCtrl.prototype.addCriteriagroup = function(criteriagroup) {
  * Adds a criterion to the condition
  */
 StepConditionsEditCtrl.prototype.addCriterion = function(criteriagroup) {
-    //use the service method
+    //use the service method to add a new criterion
     this.stepConditionsService.addCriterion(criteriagroup);
 };
 
 /**
- * Delete a criteria group
+ * Delete a criteria group (and its children)
  */
 StepConditionsEditCtrl.prototype.removeCriteriagroup = function(group) {
-    //TODO : maybe add the CGid in the Partial to help track
-    this.stepConditionsService.removeCriteriagroup(this.conditionstructure, group);
+    this.confirmService.open(
+        // Confirm options
+        {
+            title:         Translator.trans('criteriagroup_delete_title',   {}, 'path_wizards'),
+            message:       Translator.trans('criteriagroup_delete_confirm', {}, 'path_wizards'),
+            confirmButton: Translator.trans('criteriagroup_delete',         {}, 'path_wizards')
+        },
+
+        // Confirm success callback
+        function () {
+            //use the service method to add a remove a criteriagroup
+            this.stepConditionsService.removeCriteriagroup(this.conditionstructure[0].criteriagroups, group);
+        }.bind(this)
+    );
 };
 
 /**

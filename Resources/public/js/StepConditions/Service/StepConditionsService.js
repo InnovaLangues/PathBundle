@@ -29,6 +29,7 @@
                 // Initialize step properties
                 this.id                = IdentifierService.generateUUID();
                 //the step the conditions belongs to (not useful if condition structure saved into path structure JSON: it will be at the step level)
+                this.scid              = null;
                 // this.step              = step;
                 //list of criteria group
                 this.criteriagroups     = [];
@@ -46,7 +47,8 @@
             var Criterion = function Criterion() {
                 // criteria group identifier
                 this.id                  = IdentifierService.generateUUID();
-                //activity status, user group, primary resource repeat
+                this.critid              = null;
+                //type : activity status, user group, primary resource repeat
                 this.type                = null;
                 this.data                = null;
             };
@@ -64,6 +66,7 @@
                 }
                 // criteria group identifier
                 this.id = IdentifierService.generateUUID();
+                this.cgid = null;
                 this.lvl = lvl;
                 //contains array of criterion and/or criteria group
                 this.criterion = [];
@@ -321,7 +324,6 @@ console.log('testCriterion :');console.log(criterion);console.log(test);
                  * @param {function} callback - a callback to execute on each criteriagroup (called with args `parentCriteriagroup`, `currentCriteriagroup`)
                  */
                 browseCriteriagroups: function browseCriteriagroups(criteriagroups, callback) {
-console.log('browseCriteriagroups: criteriagroups');
                     /**
                      * Recursively loop through the criteriagroups to execute callback on each criteriagroup
                      * @param   {object} parentCriteriagroup
@@ -329,9 +331,6 @@ console.log('browseCriteriagroups: criteriagroups');
                      * @returns {boolean}
                      */
                     function recursiveLoop(parentCriteriagroup, currentCriteriagroup) {
-console.log('recursiveLoop(parentCriteriagroup, currentCriteriagroup)');
-console.log(parentCriteriagroup);
-console.log(currentCriteriagroup);
                         var terminated = false;
 
                         // Execute callback on current criteriagroup
@@ -341,18 +340,16 @@ console.log(currentCriteriagroup);
 
                         if (!terminated && typeof currentCriteriagroup.criteriagroup !== 'undefined' && currentCriteriagroup.criteriagroup.length !== 0) {
                             for (var i = 0; i < currentCriteriagroup.criteriagroup.length; i++) {
-console.log('i='+i);
                                 terminated = recursiveLoop(currentCriteriagroup, currentCriteriagroup.criteriagroup[i]);
                             }
                         }
-console.log('terminated');
-console.log(terminated);
                         return terminated;
                     }
 
                     if (typeof criteriagroups !== 'undefined' && criteriagroups.length !== 0) {
                         for (var j = 0; j < criteriagroups.length; j++) {
                             var terminated = recursiveLoop(null, criteriagroups[j]);
+
                             if (terminated) {
                                 break;
                             }
@@ -365,17 +362,10 @@ console.log(terminated);
                  * @param {object} criteriagroupToDelete - the criteriagroup to delete
                  */
                 removeCriteriagroup: function removeCriteriagroup(criteriagroups, criteriagroupToDelete) {
-console.log('removeCriteriagroup: function removeCriteriagroup(criteriagroups, criteriagroupToDelete)');
-console.log('criteriagroupToDelete');console.log(criteriagroupToDelete);
                     this.browseCriteriagroups(criteriagroups, function (parent, group) {
-console.log('this.browseCriteriagroups(criteriagroups, function (parent, group)');
-console.log(criteriagroups);
-console.log(parent);
-console.log(group);
                         var deleted = false;
                         //if current criteriagroup is the one to be deleted
                         if (group === criteriagroupToDelete) {
-console.log("group === criteriagroupToDelete");
                             if (typeof parent !== 'undefined' && null !== parent) {
                                 var pos = parent.criteriagroup.indexOf(criteriagroupToDelete);
                                 if (-1 !== pos) {
@@ -384,7 +374,6 @@ console.log("group === criteriagroupToDelete");
                                     deleted = true;
                                 }
                             } else {
-console.log("group !== criteriagroupToDelete");
                                 // We are deleting the root criteriagroup
                                 var pos = criteriagroups.indexOf(criteriagroupToDelete);
                                 if (-1 !== pos) {
@@ -394,7 +383,6 @@ console.log("group !== criteriagroupToDelete");
                                 }
                             }
                         }
-
                         return deleted;
                     });
                 },
@@ -405,20 +393,6 @@ console.log("group !== criteriagroupToDelete");
                     //TODO : Check stuff
                     return condition;
                 }
-
-                /**
-                 * Save the condition in the path
-                 * SHOULD BE USELESS : condition saved when path saved
-                 */
-               /* saveCondition: function() {
-                    //retrieve current step
-                    var step = this.pathService.getStep(this.current.stepId);
-                    //add condition to the step
-                    step.condition = condition;
-                    //save the path
-                    this.pathService.save();
-                }
-                */
             };
         }
     ]);

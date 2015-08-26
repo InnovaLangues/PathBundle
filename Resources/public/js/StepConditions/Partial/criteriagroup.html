@@ -1,6 +1,4 @@
 <div class="condition-criteria-group" >
-  <p><b>group :</b> {{group}}</p>
-    <p><b>group index :</b> {{$index}}</p>
     <!-- Group of buttons for the criteria group -->
     <div class="btn-group" role="group">
         <button type="button" data-ng-click="stepConditionsEditCtrl.addCriteriagroup(group)" class="btn btn-sm btn-primary">
@@ -13,12 +11,11 @@
             <span>{{ 'condition_criterion_add'|trans:{}:'path_wizards' }}</span>
         </button>
 
-        <button type="button" data-ng-click="stepConditionsEditCtrl.removeCriteriagroup(group)" class="btn btn-sm btn-danger text-right">
+        <button type="button" ng-if="group.lvl>0" data-ng-click="stepConditionsEditCtrl.removeCriteriagroup(group)" class="btn btn-sm btn-danger text-right">
             <span class="fa fa-trash"></span>
             <span>{{ 'condition_criteria_group_delete'|trans:{}:'path_wizards' }}</span>
         </button>
     </div>
-    <p>criteria group id : {{group.id}}</p>
 
     <!-- criterion Block, recursive generation -->
     <ul class="criterion">
