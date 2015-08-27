@@ -6,6 +6,7 @@ copy: copie
 condition_access: Condition d'accès pour
 condition_condition_delete: Supprimer la condition
 condition_criterion_add : Ajouter un critère
+condition_criterion_choice: Votre choix
 condition_criteria_group_add : Ajouter un groupe de critère
 condition_criteria_group_delete : Supprimer le groupe de critère
 condition_criterion_delete: Supprimer le critère
