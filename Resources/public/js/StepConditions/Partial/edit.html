@@ -1,7 +1,5 @@
 <div>
 
-    <p>{{stepConditionsEditCtrl.conditionstructure == ''}}</p>
-
     <!-- display these buttons only when a condition is created -->
     <div class="btn-group" role="group" data-ng-if="stepConditionsEditCtrl.conditionstructure.length !== 0">
 <!--
@@ -23,7 +21,6 @@
 
     <div data-ps-class="step-conditions-container" data-ps-push-class="step-conditions-opened">
         <div class="step-conditions">
-            <br>current : {{stepConditionsEditCtrl.current}}
             <!-- Block to display where there is no condition structure -->
             <div data-ng-if="stepConditionsEditCtrl.conditionstructure.length === 0" class="text-center">
                 <em>{{ 'condition_no_conditionstructure'|trans:{}:'path_wizards' }}</em>
@@ -41,15 +38,12 @@
 
             <!-- Block to display when a condition structure is set -->
             <div class="condition-container" data-ng-if="stepConditionsEditCtrl.conditionstructure.length !== 0">
-
-                Condition ID : {{stepConditionsEditCtrl.conditionstructure[0].id}}
                 <!-- criteriagroup block, recursive generation -->
                 <ul class="criteriagroup">
                     <li class="criteriagroup-li" data-ng-repeat="group in stepConditionsEditCtrl.conditionstructure[0].criteriagroups"
                         data-ng-include="stepConditionsEditCtrl.webDir + 'bundles/innovapath/js/StepConditions/Partial/criteriagroup.html'">
                     </li>
                 </ul>
-
             </div>
 
         </div>

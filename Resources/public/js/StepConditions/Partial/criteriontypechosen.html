@@ -5,7 +5,7 @@
         <select name="criterion-usergroup" id="criterion-usergroup"
                 data-ng-model="criterion.data"
                 data-ng-options="k as v for (k, v) in stepConditionsEditCtrl.criterionUsergroup">
-            <option value="">{{ 'condition_criterion_selectgroup'|trans:{}:'path_wizards' }}</option>
+            <option value="">{{ 'condition_criterion_choice'|trans:{}:'path_wizards' }}</option>
         </select>
     </div>
 </div>
@@ -26,8 +26,8 @@
         -->
         <select name="criterion-activitystatus" id="criterion-activitystatus"
                 data-ng-model="criterion.data"
-                data-ng-options="k as v for (k, v) in stepConditionsEditCtrl.criterionActivitystatuses">
-            <option value="">{{ 'condition_criterion_selectstatus'|trans:{}:'path_wizards' }}</option>
+                data-ng-options="v for (k, v) in stepConditionsEditCtrl.criterionActivitystatuses">
+            <option value="">{{ 'condition_criterion_choice'|trans:{}:'path_wizards' }}</option>
         </select>
     </div>
 </div>
