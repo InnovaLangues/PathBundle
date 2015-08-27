@@ -219,29 +219,28 @@ class PublishingManager
         // Retrieve existing steps for this path
         $existingSteps = $this->path->getSteps();
 
-//        echo "DB steps : <br>";var_dump($existingSteps);
+//        //echo "DB steps : <br>";var_dump($existingSteps);
 
         foreach ($steps as $stepStructure) {
-//echo "stepStructure->resourceId ";echo $stepStructure->resourceId."<br>\n";
-//echo "stepStructure type ";echo gettype($stepStructure)."<br>\n";
+//echo "before : stepStructure->resourceId=";//echo $stepStructure->resourceId."<br>\n";
             if (empty($stepStructure->resourceId) || !$existingSteps->containsKey($stepStructure->resourceId)) {
-//echo "empty <br>";//echo 'level'.$level."<br>\n";
+//echo "create step <br>";//echo 'level'.$level."<br>\n";
                 // Current step has never been published or step entity has been deleted => create it
                 $step = $this->stepManager->create($this->path, $level, $parent, $currentOrder, $stepStructure);
                 $uniqId = "_STEP".uniqid();
                 $this->uniqId2step[$uniqId] = $step;
                 // Update json structure with new resource ID
                 $stepStructure->resourceId = $uniqId;
+//echo "after create step : stepStructure->resourceId =";//echo $stepStructure->resourceId."<br>\n";
             } else {
-//echo "NOT EMPTY <br>";//echo 'level'.$level.' stepStructure->resourceId:'.$stepStructure->resourceId.' parent'.$parent."<br>\n";
+//echo "update step <br>";//echo 'level'.$level.' stepStructure->resourceId:'.$stepStructure->resourceId.' parent'.$parent."<br>\n";
                 // Step already exists => update it
                 $step = $existingSteps->get($stepStructure->resourceId);
                 $step = $this->stepManager->edit($this->path, $level, $parent, $currentOrder, $stepStructure, $step);
-
-                //condition management
-                $this->publishStepConditions($step, $stepStructure);
-
             }
+
+            //condition management
+            $publishedStepConditions = $this->publishStepConditions($step, $stepStructure);
 
             // Manage resources inheritance
             $excludedResources = !empty($stepStructure->excludedResources) ? $stepStructure->excludedResources : array();
@@ -483,7 +482,7 @@ class PublishingManager
             $conditionJS = $stepJS->condition;
 
             // Current criteriagroup has never been published or criteriagroup entity has been deleted => create it
-            if (empty($conditionJS->cid) || !$existingCondition->containsKey($conditionJS->cid))
+            if (empty($conditionJS->scid) || !$existingCondition->containsKey($conditionJS->scid))
             {
 //echo "create condition <br>\n";
                 $publishedCondition = $this->stepConditionsManager->createStepCondition($stepDB);
@@ -495,13 +494,13 @@ class PublishingManager
             else
             {
 //echo "update condition <br>\n";
-                $publishedCondition = $existingCondition->getStepCondition($conditionJS->cid);
+                $publishedCondition = $existingCondition->getStepCondition($conditionJS->scid);
                 $publishedCondition = $this->stepConditionsManager->editStepCondition($stepDB, $publishedCondition);
             }
 
 //echo "manage criteriagroups <br>\n";
             //manage criteriagroups
-            $this->publishCriteriagroups($publishedCondition, 0, null, $conditionJS->criteriagroups);
+            $publishedCriteriagroup = $this->publishCriteriagroups($publishedCondition, 0, null, $conditionJS->criteriagroups);
 
 //echo "Clean Condition to remove <br>\n";
             // Clean Condition to remove
@@ -551,7 +550,7 @@ class PublishingManager
             }
 //echo "Manage criteria <br>\n";
             // Manage criteria
-            $processedCriteria = $this->publishCriteria($criteriagroupJS, $criteriagroupDB);
+            $publishedCriteria = $this->publishCriteria($criteriagroupJS, $criteriagroupDB);
 
             // Store criteriagroup to know it doesn't have to be deleted when we will clean the condition
             $processedCriteriagroups[] = $criteriagroupDB;
@@ -576,8 +575,6 @@ class PublishingManager
      * Update criteria from a criteriagroup
      *
      * @param array $criteriagroupJS
-     * @param null $data
-     * @param null $ctype
      * @param Criteriagroup $criteriagroupDB
      * @return array
      */
