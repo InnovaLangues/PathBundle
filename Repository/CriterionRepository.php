@@ -1,6 +1,6 @@
 <?php
 
-namespace Innova\PathBundle\Entity;
+namespace Innova\PathBundle\Repository;
 
 /**
  * CriterionRepository
