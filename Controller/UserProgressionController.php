@@ -63,16 +63,16 @@ class UserProgressionController
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      *
      * @Route(
-     *     "/step/{id}/{status}",
+     *     "/step/{id}/{status}/{authorized}",
      *     name         = "innova_path_progression_update",
      *     requirements = {"id" = "\d+"},
      *     options      = { "expose" = true }
      * )
      * @Method("PUT")
      */
-    public function updateAction(Step $step, $status)
+    public function updateAction(Step $step, $status, $authorized)
     {
-        $progression = $this->userProgressionManager->update($step, null, $status);
+        $progression = $this->userProgressionManager->update($step, null, $status, $authorized);
 
         return new JsonResponse($progression);
     }

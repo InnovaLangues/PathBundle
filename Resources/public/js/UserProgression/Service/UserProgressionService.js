@@ -60,7 +60,6 @@
                     if (typeof status !== 'undefined' && null !== status && status.length !== 0) {
                         params.status = status;
                     }
-
                     $http
                         .post(Routing.generate('innova_path_progression_create', params))
 
@@ -84,12 +83,12 @@
                  * Update Progression of the User for a Step
                  * @param step
                  * @param status
+                 * @param authorized
                  */
-                update: function update(step, status) {
+                update: function update(step, status, authorized) {
                     var deferred = $q.defer();
-
                     $http
-                        .put(Routing.generate('innova_path_progression_update', { id: step.resourceId, status: status }))
+                        .put(Routing.generate('innova_path_progression_update', { id: step.resourceId, status: status, authorized: authorized }))
 
                         .success(function (response) {
                             // Store step progression in the Path progression array
@@ -97,6 +96,7 @@
                                 progression[response.stepId] = response;
                             } else {
                                 progression[response.stepId].status = response.status;
+                                progression[response.stepId].authorized = response.authorized;
                             }
 
                             deferred.resolve(response.status);
