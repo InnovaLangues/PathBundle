@@ -17,7 +17,7 @@ console.log("i'm inside PathSummaryShowCtrl");
 };
 
 // Extends the base controller
-PathSummaryShowCtrl.prototype = PathSummaryBaseCtrl.prototype;
+PathSummaryShowCtrl.prototype = Object.create(PathSummaryBaseCtrl.prototype);
 PathSummaryShowCtrl.prototype.constructor = PathSummaryShowCtrl;
 
 /**
