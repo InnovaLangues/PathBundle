@@ -3,15 +3,13 @@
  * @returns {PathSummaryShowCtrl}
  * @constructor
  */
-var PathSummaryShowCtrl = function PathSummaryShowCtrl($routeParams, PathService, StepConditionsService, UserProgressionService) {
+var PathSummaryShowCtrl = function PathSummaryShowCtrl($routeParams, PathService, StepConditionsService, UserProgressionService, AlertService) {
     PathSummaryBaseCtrl.apply(this, arguments);
 
     // Get Progression of the current User
     this.userProgressionService = UserProgressionService;
     this.userProgression = this.userProgressionService.get();
-console.log("i'm inside PathSummaryShowCtrl");
-//console.log(this.structure);
-//console.log("pathServicegetAllEvaluationsForPath");console.log(this.pathService.getAllEvaluationsForPath(this.pathService.getId()));
+    this.alertService= AlertService;
 
     return this;
 };
@@ -33,32 +31,38 @@ PathSummaryShowCtrl.prototype.updateProgression = function (step, newStatus) {
         this.userProgressionService.update(step, newStatus);
     }
 };
-
+/**
+ * Override for goTo method to manage conditions
+ * @param step
+ */
 PathSummaryShowCtrl.prototype.goTo = function goTo(step) {
-console.log("i'm really inside PathSummaryShowCtrl !");
-    //to avoid empty step
-    if (typeof this.current.stepId == 'undefined'){this.current.stepId = this.structure[0].id}
-    var progression = this.userProgression[this.current.stepId];
+    var curentStepId = step.id;
+    var rootStep = this.structure[0];
+
+    //make sure root is accessible anyways
+    if (typeof this.userProgression[rootStep.id]=='undefined'
+        || !angular.isDefined(this.userProgression[rootStep.id].authorized)
+        || !this.userProgression[rootStep.id].authorized) {
+        this.userProgressionService.update(rootStep, this.userProgression[rootStep.id].status, 1);    //pass 1 (and not "true") to controller : problem in url
+    }
     //previous step exists ? NO : we're on root step => access
     if (!angular.isObject(this.pathService.getPrevious(step))) {
-        if (typeof progression=='undefined' || !angular.isDefined(progression.authorized) || !progression.authorized){
-console.log("root update");
-            this.userProgressionService.update(step, progression.status, 1);    //pass 1 (and not "true") to controller : problem in url
-        }
         this.pathService.goTo(step);
         //previous step exists ? YES
     } else {
         var previousstep = this.pathService.getPrevious(step);
         //is there a flag authorized on current step ? YES => access
-        if (typeof progression!=='undefined' && angular.isDefined(progression.authorized) && progression.authorized) {
+        if (typeof this.userProgression[curentStepId]!=='undefined'
+            && angular.isDefined(this.userProgression[curentStepId].authorized)
+            && this.userProgression[curentStepId].authorized) {
             this.pathService.goTo(step);
             //is there a flag authorized on current step ? NO (or because the progression is not set)
         } else {
-            //is there a flag authorized on previous step ? NO => no access => message
-            if (typeof this.userProgression[previousstep.id]=='undefined' || !angular.isDefined(this.userProgression[previousstep.id].authorized) || !this.userProgression[previousstep.id].authorized) {
-                console.log("You can't access this step : " + step.name);
-                //is there a flag authorized on previous step ? YES
-            } else {
+            //is there a flag authorized on previous step ? YES
+            if (typeof this.userProgression[previousstep.id]!=='undefined'
+                && angular.isDefined(this.userProgression[previousstep.id].authorized)
+                && this.userProgression[previousstep.id].authorized) {
+                var progression = this.userProgression[step.id];
                 //is there a condition on previous step ? YES
                 if (angular.isDefined(previousstep.condition) && angular.isObject(previousstep.condition)) {
                     // validate condition on previous step ? YES
@@ -69,6 +73,7 @@ console.log("root update");
                         this.pathService.goTo(step);
                         // validate condition on previous step ? NO
                     } else {
+                        this.alertService.addAlert('error', Translator.trans('step_access_denied', {}, 'path_wizards'));
                         console.log("You can't access this step : " + step.name);
                     }
                     //is there a condition on previous step ? NO
@@ -78,6 +83,10 @@ console.log("root update");
                     //grant access
                     this.pathService.goTo(step);
                 }
+                //is there a flag authorized on previous step ? NO => no access => message
+            } else {
+                this.alertService.addAlert('error', Translator.trans('step_access_denied', {}, 'path_wizards'));
+                console.log("You can't access this step : " + step.name);
             }
         }
     }

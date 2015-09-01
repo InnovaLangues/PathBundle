@@ -8,6 +8,8 @@ var StepEditCtrl = function StepEditCtrl(step, inheritedResources, PathService, 
 
     this.scope       = $scope;
     this.stepService = StepService;
+    this.pathService = PathService;
+    this.nextstep = this.pathService.getNext(step);
 
     // Set TinyMCE language (need to remap english language)
     this.tinymceOptions.language = 'en_EN' == AngularApp.locale ? 'en' : AngularApp.locale;
@@ -45,7 +47,7 @@ var StepEditCtrl = function StepEditCtrl(step, inheritedResources, PathService, 
 };
 
 // Extends the base controller
-StepEditCtrl.prototype = StepBaseCtrl.prototype;
+StepEditCtrl.prototype = Object.create(StepBaseCtrl.prototype);
 StepEditCtrl.prototype.constructor = StepEditCtrl;
 
 /**
