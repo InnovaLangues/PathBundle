@@ -38,7 +38,7 @@ var PathSummaryEditCtrl = function PathSummaryEditCtrl($routeParams, PathService
 };
 
 // Extends the base controller
-PathSummaryEditCtrl.prototype = PathSummaryBaseCtrl.prototype;
+PathSummaryEditCtrl.prototype = Object.create(PathSummaryBaseCtrl.prototype);
 PathSummaryEditCtrl.prototype.constructor = PathSummaryEditCtrl;
 
 /**
