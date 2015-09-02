@@ -184,4 +184,63 @@ class StepConditionsController extends Controller
 
         return new JsonResponse($statuses);
     }
+    /**
+     * Get activities of steps of a path
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     *
+     * @Route(
+     *     "/activitylist/{path}",
+     *     name         = "innova_path_activities",
+     *     options      = { "expose" = true }
+     * )
+     * @Method("GET")
+     */
+    public function getActivityList(Path $path){
+        $activitylist = array();
+        $steps = $this->om->getRepository('InnovaPathBundle:Path')->findById($path);
+
+        foreach($steps as $step){
+            $activitylist[$step->getId()] = StepConditionsController::getActivityEvaluation($step->getActivity());
+        }
+        return new JsonResponse($activitylist);
+    }
+
+    /**
+     * Get evaluation for all steps of a path
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     *
+     * @Route(
+     *     "/allevaluations/{path}",
+     *     name         = "innova_path_evaluation",
+     *     options      = { "expose" = true }
+     * )
+     * @Method("GET")
+     */
+    public function getAllEvaluationsByUserByPath($path)
+    {
+        $user = $this->securityToken->getToken()->getUser();
+        $results = $this->om->getRepository('InnovaPathBundle:StepCondition')->findAllEvaluationsByUserAndByPath((int)$path, $user->getId());
+
+        $jsonresults = array();
+        foreach($results as $r)
+        {
+            $jsonresults[] = array(
+                'eval' => array(
+                    'id' => $r->getId(),
+                    'attempts' => $r->getAttemptsCount(),
+                    'status' => $r->getStatus(),
+                    'score' => $r->getScore(),
+                    'numscore' => $r->getNumScore(),
+                    'scooremin' => $r->getScoreMin(),
+                    'scoremax' => $r->getScoreMax(),
+                    'type' => $r->getType(),
+                ),
+                'evaltype'    => $r->getActivityParameters()->getEvaluationType(),
+                'idactivity'    => $r->getActivityParameters()->getActivity()->getId(),
+                'activitytitle'    => $r->getActivityParameters()->getActivity()->getTitle(),
+            );
+        }
+
+        return new JsonResponse($jsonresults);
+    }
 }

@@ -22,11 +22,16 @@ var StepConditionsBaseCtrl = function StepConditionsBaseCtrl($route, $routeParam
     //Get the current step
     var step = this.pathService.getStep(this.current.stepId);
 
+//    this.evaluation[step.id] = this.stepConditionsService.getEvaluationFromController(step.activityId);
+
     //get the current condition
     this.conditionstructure = [];
     if (angular.isObject(step) && angular.isObject(step.condition)){
         this.conditionstructure = [step.condition];
     }
+
+    //TODO : Make it work, to use in conditions
+//    this.stepConditionsService.getAllEvaluationsForPath(this.structure);
 
     return this;
 };

@@ -9,13 +9,8 @@
         '$q',
         'IdentifierService',
         function StepConditionsService($http, $q, IdentifierService) {
-            /**
-             * List of group of user
-             * @type {array}
-             */
-            var usergrouplist = null;
-            var statuseslist = null;
             var useringroup = null;
+            var activitieslist = [];
             /**
              * Evaluation data from \CoreBundle\Entity\Activity\Evaluation
              * @type {null}
@@ -71,6 +66,9 @@
                 this.criteriagroup = [];
             };
             return {
+                getEvaluation: function getEvaluation(){
+                    return this.evaluation;
+                },
                 /**
                  * Retrieve evaluation data from DB for an activity
                  *
@@ -83,34 +81,6 @@
                 },
                 setEvaluation: function setEvaluation(value){
                     this.evaluation = value;
-                },
-                /**
-                 * Retrieve usergroup list from DB
-                 *
-                 * @returns {*|usergrouplist}
-                 */
-                getUsergroupListFromController: function getUsergroupListFromController(){
-                    this.getUsergroup();
-                    return this.usergrouplist;
-                },
-                /**
-                 * set the usergroup list value
-                 * @param ugl
-                 */
-                setUsergroupList: function setUsergroupList(ugl){
-                    this.usergrouplist = ugl;
-                },
-                /**
-                 * Retrieve activity statuses list from DB
-                 *
-                 * @returns {*|statuseslist}
-                 */
-                getStatusesListFromController: function getStatusesListFromController(){
-                    this.getEvaluationStatuses();
-                    return this.statuseslist;
-                },
-                setStatusesList: function setStatusesList(sl) {
-                    this.statuseslist = sl;
                 },
                 /**
                  * Retrieve usergroup list from DB
@@ -178,46 +148,6 @@
                     return newCriterion;
                 },
                 /**
-                 * Retrieve the list of statuses for activity
-                 *
-                 * @returns {*}
-                 */
-                getEvaluationStatuses: function getEvaluationStatuses() {
-                    var deferred = $q.defer();
-                    var params = {};
-                    $http
-                        .get(Routing.generate('innova_path_criteria_activitystatuses', params))
-                        .success(function (response) {
-                            this.setStatusesList(response);
-                            deferred.resolve(response);
-                        }
-                            .bind(this)) //to access StepConditionsService object method and attributes
-                        .error(function (response) {
-                            deferred.reject(response);
-                        });
-                    return deferred.promise;
-                },
-                /**
-                 * Get the list of User groups
-                 *
-                 * @returns {object}
-                 */
-                getUsergroup: function getUsergroup() {
-                    var deferred = $q.defer();
-                    var params = {};
-                    $http
-                        .get(Routing.generate('innova_path_criteria_usergroup', params))
-                        .success(function (response) {
-                            this.setUsergroupList(response);
-                            deferred.resolve(response);
-                        }
-                            .bind(this)) //to access StepConditionsService object method and attributes
-                        .error(function (response) {
-                            deferred.reject(response);
-                        });
-                    return deferred.promise;
-                },
-                /**
                  * Get the list of group the user is registered in
                  *
                  * @returns {object}
@@ -264,39 +194,48 @@ console.log('getActivityEvaluation success');console.log(response);
                  * @returns {boolean}
                  */
                 testCondition: function testCondition(step) {
-                    //get root criteriagroup
-                    var criteriagroups = step.condition.criteriagroups;
-      //              var activityEvaluation = getActivityEvaluation(activityId);
-                    var result = true;
-                    for (var i=0;i<criteriagroups.length;i++) {
-                        result = result || this.testCriteriagroup(criteriagroups);
-console.log("Inside testCondition, for i = "+i+ " result : ");console.log(result);
+console.log(step);
+                    if (angular.isDefined(step.activityId)){
+                        this.getEvaluationFromController(step.activityId);
                     }
+                    var result=false;
+                    //get root criteriagroup
+                    var criteriagroups=step.condition.criteriagroups;
+console.log("criteriagroups.length = "+criteriagroups.length);
+                    //criteriagroup : OR test
+                    for(var i=0;i<criteriagroups.length;i++){
+                        result=this.testCriteriagroup(criteriagroups[i])||result;
+console.log("Inside testCondition, groupe"+i+", result : ");console.log(result);
+                    }
+console.log(" testCondition, Final result : ");console.log(result);
                     return result;
                 },
                 /**
-                 * Test a criteriagroup from a criteriagroup
+                 * Test a criteriagroup from a criteriagroup in condition
                  *
                  * @param cgroup
                  * @returns {boolean}
                  */
                 testCriteriagroup: function testCriteriagroup(cgroup) {
-                    //First, get all the criteria
-                    var crit = cgroup.criterion;
-                    var result = true;
-                    //test all criteria of the criteriagroup
-                    for (var i=0;i<crit.length;i++){
-                        result = result && this.testCriterion(crit[i]);
-console.log("Inside testCriteriagroup(criterion), for i = "+i+ " result : ");console.log(result);
+                    var result=true;
+                    //First, get all the criteria from this group
+                    var crit=cgroup.criterion;
+                    //test all criteria of the criteriagroup : AND TEST
+                    for(var i=0;i<crit.length;i++){
+                        result=this.testCriterion(crit[i])&&result;
+console.log("Inside testCriteriagroup(criterion), for i = "+i+" result : ");console.log(result);
                     }
-                    var cgl = cgroup.criteriagroup.length;
-                    //then test all criteriagroup inside this criteriagroup (recursive part)
-                    if (cgl > 0) {
-                        for (var j=0;j<cgl;j++) {
-                            result = result || this.testCriteriagroup(cgroup.criteriagroup[j]);
-console.log("Inside testCriteriagroup(criteriagroup), for j = "+j+ " result : ");console.log(result);
+console.log("testCriteriagroup, criterion final result : ");console.log(result);
+                    var cgl=cgroup.criteriagroup.length;
+                    if(cgl>0){
+                        //then test all criteriagroup inside this criteriagroup (recursive part) : OR test
+                        for(var j=0;j<cgl;j++){
+                            result=this.testCriteriagroup(cgroup.criteriagroup[j])||result;
+console.log("Inside testCriteriagroup(criteriagroup), for j = "+j+" result : ");console.log(result);
                         }
+console.log("testCriteriagroup, criteriagroup final result : ");console.log(result);
                     }
+console.log("testCriteriagroup, final result : ");console.log(result);
                     return result;
                 },
                 /**
@@ -306,31 +245,29 @@ console.log("Inside testCriteriagroup(criteriagroup), for j = "+j+ " result : ")
                  * @returns {boolean}
                  */
                 testCriterion: function testCriterion(criterion) {
-                    var test = false;
+console.log(criterion);
+                    var test=false;
                     //retrieve evaluation data to check against (evaluation must be retrieved when step is loaded)
-                    var evaluationResultToCheck = this.evaluation;
-                    //if there are data
-                    if (evaluationResultToCheck !== null && evaluationResultToCheck.status !== 'NA'){
-                        switch (criterion.type) {
-                            case "activityrepetition":
-                                test = (criterion.data === evaluationResultToCheck.attempts);
+                    var evaluationResultToCheck=this.getEvaluation();
+                    //if there is data
+                    if(angular.isDefined(evaluationResultToCheck)||criterion.type=="usergroup"){
+                        switch(criterion.type){
+                            case"activityrepetition":
+                                test=(criterion.data===evaluationResultToCheck.attempts);
 console.log('activityrepetition '+criterion.data);
-//test = true;
                                 break;
-                            case "activitystatus":
-                                test = (criterion.data === evaluationResultToCheck.status);
+                            case"activitystatus":
+                                test=(criterion.data===evaluationResultToCheck.status);
 console.log('activitystatus '+criterion.data);
-//test = false;
                                 break;
-                            case "usergroup":
-                                test = (criterion.data === this.useringroup);
+                            case"usergroup":
+                                test=(criterion.data===this.useringroup);
 console.log('usergroup '+criterion.data);
                                 break;
-                            default:
-                                break;
+                            default:break;
                         }
                     }
-console.log('testCriterion :');console.log(criterion);console.log(test);
+console.log('resultat ');console.log(test);
                     return test;
                 },
 

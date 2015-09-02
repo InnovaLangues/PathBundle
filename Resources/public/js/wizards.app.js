@@ -106,6 +106,27 @@
 
                 return inherited;
             }
+        ],
+        /**
+         * get return values of promises made in PathService to be available elsewhere
+         */
+        /**
+         * list of all user group in Claro
+         */
+        allgroups: [
+            'PathService',
+            function getAllgroups(PathService) {
+                return PathService.usergrouppromise;
+            }
+        ],
+        /**
+         * list of all evaluation statuses in Claro
+         */
+        conditionEvaluationStatuses: [
+            'PathService',
+            function getEvaluationStatuses(PathService) {
+                return PathService.evaluationstatusespromise;
+            }
         ]
     };
 

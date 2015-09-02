@@ -42,8 +42,33 @@
              * @type {Array}
              */
             var arrnextall = [];
+            var evaluations = [];
 
+            var usergrouplist=[];
+            var evaluationstatuses=[];
+            var deferred = $q.defer();
+
+            //expose the promises
+            var usergrouppromise = $http.get(Routing.generate('innova_path_criteria_usergroup',{}))
+                .success(function(response){
+                    usergrouplist = response;
+                    deferred.resolve(response);
+                });
+            var evaluationstatusespromise = $http.get(Routing.generate('innova_path_criteria_activitystatuses', {}))
+                .success(function (response) {
+                    evaluationstatuses = response;
+                    deferred.resolve(response);
+                });
             return {
+                usergrouppromise:usergrouppromise,
+                evaluationstatusespromise:evaluationstatusespromise,
+                //create a get method for the variable to retrieve
+                getUsergroupData:function getUsergroupData(){
+                    return usergrouplist;
+                },
+                getEvaluationStatusesData:function getEvaluationStatusesData(){
+                    return evaluationstatuses;
+                },
                 /**
                  * get list of all child steps of a step
                  * @returns {array}
@@ -311,6 +336,44 @@
                     }
                     return true;
                 },
+                getAllEvaluationForSteps: function getAllEvaluationForSteps(path){
+                    var steps = [];
+                    var evaluations = [];
+                    var activity = null;
+                    var root = this.getRoot() ;
+                    steps = this.getNextAll(root);
+                    if (steps.length>0){
+                        for(var i=0;i<steps.length;i++){
+                            activity = steps[i].activityId;
+                            evaluations.push({"step":steps[i].id,"eval":this.getEvaluationFromController(activity)});
+                        }
+                    }
+                    return evaluations;
+                },
+
+                /**
+                 * Retrieve all evaluation for a path
+                 *
+                 * @param path
+                 */
+                getAllEvaluationsForPath: function getAllEvaluationsForPath(path) {
+                    var deferred = $q.defer();
+                    var params = {'path':path};
+                    $http
+                        .get(Routing.generate('innova_path_evaluation', params))
+                        .success(function (response) {
+                            this.setEvaluation(response);
+                            deferred.resolve(response);
+                        }.bind(this))
+                        .error(function (response) {
+                            deferred.reject(response);
+                        });
+                    return deferred.promise;
+                },
+                setEvaluation: function setEvaluation(data){
+                  this.evaluations = data;
+                },
+
                 /**
                  * Retrieve the next sibling of an element
                  * @param step
