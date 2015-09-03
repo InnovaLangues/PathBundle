@@ -71,7 +71,7 @@ class UserProgressionManager
         return $progression;
     }
 
-    public function update(Step $step, User $user = null, $status, $authorized)
+    public function update(Step $step, User $user = null, $status, $authorized=false)
     {
         if (empty($user)) {
             // Load current logged User
@@ -86,7 +86,7 @@ class UserProgressionManager
 
         if (empty($progression)) {
             // No progression for User => initialize a new one
-            $progression = $this->create($step, $user, $status);
+            $progression = $this->create($step, $user, $status, $authorized);
         } else {
             // Update existing progression
             $progression->setStatus($status);

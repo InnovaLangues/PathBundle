@@ -70,19 +70,6 @@
                     return this.evaluation;
                 },
                 /**
-                 * Retrieve evaluation data from DB for an activity
-                 *
-                 * @param activityId
-                 * @returns {*}
-                 */
-                getEvaluationFromController: function getEvaluationFromController(activityId){
-                    this.getActivityEvaluation(activityId);
-                    return this.evaluation;
-                },
-                setEvaluation: function setEvaluation(value){
-                    this.evaluation = value;
-                },
-                /**
                  * Retrieve usergroup list from DB
                  *
                  * @returns {*|usergrouplist}
@@ -178,8 +165,8 @@
                     $http
                         .get(Routing.generate('innova_path_activity_eval', params))
                         .success(function (response) {
-console.log('getActivityEvaluation success');console.log(response);
-                            this.setEvaluation(response);
+//console.log('getActivityEvaluation success');console.log(response);
+                            this.evaluation = response;
                             deferred.resolve(response);
                         }.bind(this))
                         .error(function (response) {
@@ -193,21 +180,18 @@ console.log('getActivityEvaluation success');console.log(response);
                  * @param step
                  * @returns {boolean}
                  */
-                testCondition: function testCondition(step) {
-console.log(step);
-                    if (angular.isDefined(step.activityId)){
-                        this.getEvaluationFromController(step.activityId);
-                    }
+                testCondition: function testCondition(step, evaluation) {
                     var result=false;
                     //get root criteriagroup
                     var criteriagroups=step.condition.criteriagroups;
-console.log("criteriagroups.length = "+criteriagroups.length);
+                    this.evaluation = evaluation;
+//console.log("this.getEvaluation()");console.log(this.getEvaluation());
                     //criteriagroup : OR test
                     for(var i=0;i<criteriagroups.length;i++){
                         result=this.testCriteriagroup(criteriagroups[i])||result;
-console.log("Inside testCondition, groupe"+i+", result : ");console.log(result);
+//console.log("Inside testCondition, groupe"+i+", result : ");console.log(result);
                     }
-console.log(" testCondition, Final result : ");console.log(result);
+//console.log(" testCondition, Final result : ");console.log(result);
                     return result;
                 },
                 /**
@@ -223,19 +207,19 @@ console.log(" testCondition, Final result : ");console.log(result);
                     //test all criteria of the criteriagroup : AND TEST
                     for(var i=0;i<crit.length;i++){
                         result=this.testCriterion(crit[i])&&result;
-console.log("Inside testCriteriagroup(criterion), for i = "+i+" result : ");console.log(result);
+//console.log("Inside testCriteriagroup(criterion), for i = "+i+" result : ");console.log(result);
                     }
-console.log("testCriteriagroup, criterion final result : ");console.log(result);
+//console.log("testCriteriagroup, criterion final result : ");console.log(result);
                     var cgl=cgroup.criteriagroup.length;
                     if(cgl>0){
                         //then test all criteriagroup inside this criteriagroup (recursive part) : OR test
                         for(var j=0;j<cgl;j++){
                             result=this.testCriteriagroup(cgroup.criteriagroup[j])||result;
-console.log("Inside testCriteriagroup(criteriagroup), for j = "+j+" result : ");console.log(result);
+//console.log("Inside testCriteriagroup(criteriagroup), for j = "+j+" result : ");console.log(result);
                         }
-console.log("testCriteriagroup, criteriagroup final result : ");console.log(result);
+//console.log("testCriteriagroup, criteriagroup final result : ");console.log(result);
                     }
-console.log("testCriteriagroup, final result : ");console.log(result);
+//console.log("testCriteriagroup, final result : ");console.log(result);
                     return result;
                 },
                 /**
@@ -245,7 +229,7 @@ console.log("testCriteriagroup, final result : ");console.log(result);
                  * @returns {boolean}
                  */
                 testCriterion: function testCriterion(criterion) {
-console.log(criterion);
+//console.log("criterion");console.log(criterion);
                     var test=false;
                     //retrieve evaluation data to check against (evaluation must be retrieved when step is loaded)
                     var evaluationResultToCheck=this.getEvaluation();
@@ -254,20 +238,20 @@ console.log(criterion);
                         switch(criterion.type){
                             case"activityrepetition":
                                 test=(criterion.data===evaluationResultToCheck.attempts);
-console.log('activityrepetition '+criterion.data);
+//console.log('activityrepetition '+criterion.data);
                                 break;
                             case"activitystatus":
                                 test=(criterion.data===evaluationResultToCheck.status);
-console.log('activitystatus '+criterion.data);
+//console.log('activitystatus '+criterion.data);
                                 break;
                             case"usergroup":
                                 test=(criterion.data===this.useringroup);
-console.log('usergroup '+criterion.data);
+//console.log('usergroup '+criterion.data);
                                 break;
                             default:break;
                         }
                     }
-console.log('resultat ');console.log(test);
+//console.log('resultat ');console.log(test);
                     return test;
                 },
 

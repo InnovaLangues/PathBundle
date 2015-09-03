@@ -14,6 +14,6 @@ var StepConditionsShowCtrl = function StepConditionsShowCtrl($routeParams, PathS
 };
 
 // Extends the base controller
-StepConditionsShowCtrl.prototype = StepConditionsBaseCtrl.prototype;
+StepConditionsShowCtrl.prototype = Object.create(StepConditionsBaseCtrl.prototype);
 StepConditionsShowCtrl.prototype.constructor = StepConditionsShowCtrl;
 

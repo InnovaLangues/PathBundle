@@ -14,19 +14,14 @@ var StepConditionsEditCtrl = function StepConditionsEditCtrl($route, $routeParam
     this.stepConditionsService  = StepConditionsService;
     this.pathService            = PathService;
 
-    //TODO : ---JUST FOR TEST ---
-//    this.stepConditionsService.getEvaluationFromController(6);
-//console.log("this.stepConditionsService.getEvaluationFromController");console.log(this.evaluation);
-
-    //TODO : put this at path level to avoid reload
-    this.useringroup = this.stepConditionsService.getUseringroupFromController();
-//console.log("this.stepConditionsService.getUseringroupFromController()");console.log(this.useringroup);
+    //list of all groups a user s registered to
+    this.useringroup = this.pathService.getUseringroupData();
 
     //default values for conditions
     //values for user group list
     this.criterionUsergroup = this.pathService.getUsergroupData();
-    
-    //values for activity statuses (here got from AJAX request, maybe hardcode the list for better performance...
+
+    //values for activity statuses (here got from AJAX request, +(maybe hardcode the list in partial for better performance...)
     this.criterionActivitystatuses=this.pathService.getEvaluationStatusesData();
 
     this.criterionActivitystatus = 'passed';
@@ -38,7 +33,7 @@ var StepConditionsEditCtrl = function StepConditionsEditCtrl($route, $routeParam
 };
 
 // Extends the base controller
-StepConditionsEditCtrl.prototype = StepConditionsBaseCtrl.prototype;
+StepConditionsEditCtrl.prototype = Object.create(StepConditionsBaseCtrl.prototype);
 StepConditionsEditCtrl.prototype.constructor = StepConditionsEditCtrl;
 
 // Show action buttons for a step in the tree (contains the ID of the step)
