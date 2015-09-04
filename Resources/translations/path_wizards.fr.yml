@@ -107,8 +107,8 @@ see_activity: Voir l'activité
 see_step_siblings: Voir les étapes soeurs
 select_activity: Sélectionner une activité existante
 show_path_info: Afficher les informations relatives au Parcours
-step_access_denied: Vous n'avez pas rempli les conditions pour accéder à cette étape
-step_access_denied_no_activity_set: Vous ne pouvez accéder à l'étape car aucune activité n'a été attribuée. Contactez le gestionnaire
+step_access_denied: Vous n'avez pas rempli les conditions pour accéder à l'étape %stepName%
+step_access_denied_no_activity_set: Vous ne pouvez accéder à l'étape %stepName% car aucune activité ne lui a été attribuée. Contactez le gestionnaire
 step_add_child: Ajouter une étape
 step_copy: Copier
 step_delete: Supprimer l'étape

@@ -72,8 +72,7 @@ StepShowCtrl.prototype.goTo = function goTo(step) {
         } else {
             //activity has been set for the step : NO => path error
             if (!angular.isDefined(previousstep.activityId)) {
-                this.alertService.addAlert('error', Translator.trans('step_access_denied_no_activity_set', {}, 'path_wizards'));
-                console.log("You can't access this step, no activity has been set for : " + step.name);
+                this.alertService.addAlert('error', Translator.trans('step_access_denied_no_activity_set', {stepName: step.name}, 'path_wizards'));
                 //activity has been set for the step : YES
             } else {
                 //is there a flag authorized on previous step ? YES
@@ -100,8 +99,7 @@ StepShowCtrl.prototype.goTo = function goTo(step) {
                                     }.bind(this));          //important, to keep the scope
                                     // validate condition on previous step ? NO
                                 } else {
-                                    this.alertService.addAlert('error', Translator.trans('step_access_denied', {}, 'path_wizards'));
-                                    console.log("You can't access this step : " + step.name);
+                                    this.alertService.addAlert('error', Translator.trans('step_access_denied', {stepName: step.name}, 'path_wizards'));
                                 }
                             }.bind(this),
                             function (error) {
@@ -118,8 +116,7 @@ StepShowCtrl.prototype.goTo = function goTo(step) {
                     }
                     //is there a flag authorized on previous step ? NO => no access => message
                 } else {
-                    this.alertService.addAlert('error', Translator.trans('step_access_denied', {}, 'path_wizards'));
-                    console.log("You can't access this step : " + step.name);
+                    this.alertService.addAlert('error', Translator.trans('step_access_denied', {stepName: step.name}, 'path_wizards'));
                 }
             }
         }

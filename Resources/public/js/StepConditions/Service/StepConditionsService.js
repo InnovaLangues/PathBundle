@@ -10,12 +10,12 @@
         'IdentifierService',
         function StepConditionsService($http, $q, IdentifierService) {
             var useringroup = null;
-            var activitieslist = [];
             /**
              * Evaluation data from \CoreBundle\Entity\Activity\Evaluation
              * @type {null}
              */
             var evaluation = null;
+            var criterialist = new Array();
             /**
              * StepConditions object
              *
@@ -185,13 +185,14 @@
                     //get root criteriagroup
                     var criteriagroups=step.condition.criteriagroups;
                     this.evaluation = evaluation;
-//console.log("this.getEvaluation()");console.log(this.getEvaluation());
+                    criterialist.push("[");
                     //criteriagroup : OR test
                     for(var i=0;i<criteriagroups.length;i++){
                         result=this.testCriteriagroup(criteriagroups[i])||result;
 //console.log("Inside testCondition, groupe"+i+", result : ");console.log(result);
                     }
 //console.log(" testCondition, Final result : ");console.log(result);
+                    criterialist.push("]");
                     return result;
                 },
                 /**
@@ -201,25 +202,32 @@
                  * @returns {boolean}
                  */
                 testCriteriagroup: function testCriteriagroup(cgroup) {
+                    criterialist.push("(");
                     var result=true;
                     //First, get all the criteria from this group
                     var crit=cgroup.criterion;
+                    criterialist.push("(");
                     //test all criteria of the criteriagroup : AND TEST
                     for(var i=0;i<crit.length;i++){
                         result=this.testCriterion(crit[i])&&result;
 //console.log("Inside testCriteriagroup(criterion), for i = "+i+" result : ");console.log(result);
                     }
+                    criterialist.push(")");
 //console.log("testCriteriagroup, criterion final result : ");console.log(result);
                     var cgl=cgroup.criteriagroup.length;
                     if(cgl>0){
+                        criterialist.push("OR (");
                         //then test all criteriagroup inside this criteriagroup (recursive part) : OR test
                         for(var j=0;j<cgl;j++){
                             result=this.testCriteriagroup(cgroup.criteriagroup[j])||result;
+                            if (j<cgl-1){criterialist.push(" OR ");}
 //console.log("Inside testCriteriagroup(criteriagroup), for j = "+j+" result : ");console.log(result);
                         }
 //console.log("testCriteriagroup, criteriagroup final result : ");console.log(result);
+                        criterialist.push(")");
                     }
 //console.log("testCriteriagroup, final result : ");console.log(result);
+                    criterialist.push(")");
                     return result;
                 },
                 /**
@@ -238,15 +246,15 @@
                         switch(criterion.type){
                             case"activityrepetition":
                                 test=(criterion.data===evaluationResultToCheck.attempts);
-//console.log('activityrepetition '+criterion.data);
+                                criterialist.push("activityrepetition must be "+criterion.data+" but you did it "+evaluationResultToCheck.attempts+" times");
                                 break;
                             case"activitystatus":
                                 test=(criterion.data===evaluationResultToCheck.status);
-//console.log('activitystatus '+criterion.data);
+                                criterialist.push("activitystatus must be "+criterion.data+", yours is "+evaluationResultToCheck.status);
                                 break;
                             case"usergroup":
                                 test=(criterion.data===this.useringroup);
-//console.log('usergroup '+criterion.data);
+                                criterialist.push("usergroup must be "+criterion.data+", you are in usergroup "+this.useringroup);
                                 break;
                             default:break;
                         }
@@ -343,6 +351,15 @@
                 cleanCondition: function(condition){
                     //TODO : Check stuff
                     return condition;
+                },
+                /**
+                 * get the list of condition criteria for a step
+                 *
+                 * @param step
+                 * @returns {string}
+                 */
+                getConditionList:function getConditionList(){
+                    return criterialist.join("\n");
                 }
             };
         }

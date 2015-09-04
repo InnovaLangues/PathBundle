@@ -1,48 +1,31 @@
 /**
  * Class constructor
- * @returns {PathSummaryShowCtrl}
+ * @returns {PathNavigationShowCtrl}
  * @constructor
  */
-var PathSummaryShowCtrl = function PathSummaryShowCtrl($routeParams, PathService, StepConditionsService, UserProgressionService, AlertService) {
-    PathSummaryBaseCtrl.apply(this, arguments);
+var PathNavigationShowCtrl = function PathNavigationShowCtrl($routeParams, $scope, PathService, UserProgressionService, StepConditionsService, AlertService) {
+    // Call parent constructor
+    PathNavigationBaseCtrl.apply(this, arguments);
 
-    // Get Progression of the current User
     this.userProgressionService = UserProgressionService;
-    this.stepConditionsService = StepConditionsService;
     this.userProgression = this.userProgressionService.get();
-    this.alertService= AlertService;
-    this.evaluation = null;
+    this.stepConditionsService = StepConditionsService;
+    this.alertService = AlertService;
     return this;
 };
 
 // Extends the base controller
-PathSummaryShowCtrl.prototype = Object.create(PathSummaryBaseCtrl.prototype);
-PathSummaryShowCtrl.prototype.constructor = PathSummaryShowCtrl;
+PathNavigationShowCtrl.prototype = Object.create(PathNavigationBaseCtrl.prototype);
+PathNavigationShowCtrl.prototype.constructor = PathNavigationShowCtrl;
 
-/**
- * Progression of the current User into the Path
- * @type {object}
- */
-PathSummaryShowCtrl.prototype.userProgression = {};
-PathSummaryShowCtrl.prototype.evaluation = null;
-
-PathSummaryShowCtrl.prototype.updateProgression = function (step, newStatus) {
-    if (!angular.isObject(this.userProgression[step.id])) {
-        this.userProgressionService.create(step, newStatus);
-    } else {
-        this.userProgressionService.update(step, newStatus);
-    }
-};
-/**
- * Override for goTo method to manage conditions
- * @param step
- */
-PathSummaryShowCtrl.prototype.goTo = function goTo(step) {
+PathNavigationShowCtrl.prototype.goToStep = function goToStep(stepid) {
+    console.log(stepid);
+    var step = this.pathService.getStep(stepid);
     var curentStepId = step.id;
-    var rootStep = this.structure[0];
+    var rootStep = this.pathService.getRoot();
 
     //make sure root is accessible anyways
-    if (typeof this.userProgression[rootStep.id] == 'undefined'
+    if (typeof this.userProgression[rootStep.id]=='undefined'
         || !angular.isDefined(this.userProgression[rootStep.id].authorized)
         || !this.userProgression[rootStep.id].authorized) {
         this.userProgressionService.update(rootStep, this.userProgression[rootStep.id].status, 1);    //pass 1 (and not "true") to controller : problem in url
@@ -89,7 +72,9 @@ PathSummaryShowCtrl.prototype.goTo = function goTo(step) {
                                     }.bind(this));          //important, to keep the scope
                                     // validate condition on previous step ? NO
                                 } else {
-                                    this.alertService.addAlert('error', Translator.trans('step_access_denied', {stepName: step.name}, 'path_wizards'));
+                                    var conditionlist=this.stepConditionsService.getConditionList();
+                                    //display error
+                                    this.alertService.addAlert('error', Translator.trans('step_access_denied_condition', {stepName: step.name, conditionList: conditionlist}, 'path_wizards'));
                                 }
                             }.bind(this),
                             function (error) {
@@ -106,7 +91,8 @@ PathSummaryShowCtrl.prototype.goTo = function goTo(step) {
                     }
                     //is there a flag authorized on previous step ? NO => no access => message
                 } else {
-                    this.alertService.addAlert('error', Translator.trans('step_access_denied', {stepName: step.name}, 'path_wizards'));
+                    //display error
+                    this.alertService.addAlert('error', Translator.trans('step_access_denied', {}, 'path_wizards'));
                 }
             }
         }
