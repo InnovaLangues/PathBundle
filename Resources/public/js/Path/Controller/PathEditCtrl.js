@@ -32,7 +32,7 @@ var PathEditCtrl = function PathEditCtrl($window, $route, $routeParams, PathServ
 };
 
 // Extends the base controller
-PathEditCtrl.prototype = PathBaseCtrl.prototype;
+PathEditCtrl.prototype = Object.create(PathBaseCtrl.prototype);
 PathEditCtrl.prototype.constructor = PathEditCtrl;
 
 /**
@@ -84,6 +84,8 @@ PathEditCtrl.prototype.redo = function () {
  */
 PathEditCtrl.prototype.save = function () {
     if (this.unsaved) {
+        //Check for condition validity
+       // console.log(this.pathService.ConditionValidityCheck());
         // Save only with there is something to change
         this.pathService.save().then(function () {
             // Mark path as modified

@@ -19,7 +19,6 @@ PathNavigationShowCtrl.prototype = Object.create(PathNavigationBaseCtrl.prototyp
 PathNavigationShowCtrl.prototype.constructor = PathNavigationShowCtrl;
 
 PathNavigationShowCtrl.prototype.goToStep = function goToStep(stepid) {
-    console.log(stepid);
     var step = this.pathService.getStep(stepid);
     var curentStepId = step.id;
     var rootStep = this.pathService.getRoot();

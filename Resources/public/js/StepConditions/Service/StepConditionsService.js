@@ -8,7 +8,8 @@
         '$http',
         '$q',
         'IdentifierService',
-        function StepConditionsService($http, $q, IdentifierService) {
+        'PathService',
+        function StepConditionsService($http, $q, IdentifierService, PathService) {
             var useringroup = null;
             /**
              * Evaluation data from \CoreBundle\Entity\Activity\Evaluation
@@ -165,7 +166,6 @@
                     $http
                         .get(Routing.generate('innova_path_activity_eval', params))
                         .success(function (response) {
-//console.log('getActivityEvaluation success');console.log(response);
                             this.evaluation = response;
                             deferred.resolve(response);
                         }.bind(this))
@@ -185,13 +185,12 @@
                     //get root criteriagroup
                     var criteriagroups=step.condition.criteriagroups;
                     this.evaluation = evaluation;
+                    criterialist = new Array();
                     criterialist.push("[");
                     //criteriagroup : OR test
                     for(var i=0;i<criteriagroups.length;i++){
                         result=this.testCriteriagroup(criteriagroups[i])||result;
-//console.log("Inside testCondition, groupe"+i+", result : ");console.log(result);
                     }
-//console.log(" testCondition, Final result : ");console.log(result);
                     criterialist.push("]");
                     return result;
                 },
@@ -208,25 +207,22 @@
                     var crit=cgroup.criterion;
                     criterialist.push("(");
                     //test all criteria of the criteriagroup : AND TEST
-                    for(var i=0;i<crit.length;i++){
+                    var cl= crit.length;
+                    for(var i=0;i<cl;i++){
                         result=this.testCriterion(crit[i])&&result;
-//console.log("Inside testCriteriagroup(criterion), for i = "+i+" result : ");console.log(result);
+                        if (i<cl-1){criterialist.push(Translator.trans('condition_and', {}, 'path_wizards'));}
                     }
                     criterialist.push(")");
-//console.log("testCriteriagroup, criterion final result : ");console.log(result);
                     var cgl=cgroup.criteriagroup.length;
                     if(cgl>0){
-                        criterialist.push("OR (");
+                        criterialist.push(Translator.trans('condition_or', {}, 'path_wizards')+ "(");
                         //then test all criteriagroup inside this criteriagroup (recursive part) : OR test
                         for(var j=0;j<cgl;j++){
                             result=this.testCriteriagroup(cgroup.criteriagroup[j])||result;
-                            if (j<cgl-1){criterialist.push(" OR ");}
-//console.log("Inside testCriteriagroup(criteriagroup), for j = "+j+" result : ");console.log(result);
+                            if (j<cgl-1){criterialist.push(Translator.trans('condition_or', {}, 'path_wizards'));}
                         }
-//console.log("testCriteriagroup, criteriagroup final result : ");console.log(result);
                         criterialist.push(")");
                     }
-//console.log("testCriteriagroup, final result : ");console.log(result);
                     criterialist.push(")");
                     return result;
                 },
@@ -237,8 +233,8 @@
                  * @returns {boolean}
                  */
                 testCriterion: function testCriterion(criterion) {
-//console.log("criterion");console.log(criterion);
                     var test=false;
+                    var data="";
                     //retrieve evaluation data to check against (evaluation must be retrieved when step is loaded)
                     var evaluationResultToCheck=this.getEvaluation();
                     //if there is data
@@ -246,20 +242,39 @@
                         switch(criterion.type){
                             case"activityrepetition":
                                 test=(criterion.data===evaluationResultToCheck.attempts);
-                                criterialist.push("activityrepetition must be "+criterion.data+" but you did it "+evaluationResultToCheck.attempts+" times");
+                                data = Translator.trans('condition_criterion_test_repetition', {activityRep:criterion.data, userRep:evaluationResultToCheck.attempts}, 'path_wizards');
                                 break;
                             case"activitystatus":
                                 test=(criterion.data===evaluationResultToCheck.status);
-                                criterialist.push("activitystatus must be "+criterion.data+", yours is "+evaluationResultToCheck.status);
+                                data = Translator.trans('condition_criterion_test_status', {activityStatus:criterion.data, userStatus:evaluationResultToCheck.status}, 'path_wizards');
                                 break;
                             case"usergroup":
-                                test=(criterion.data===this.useringroup);
-                                criterialist.push("usergroup must be "+criterion.data+", you are in usergroup "+this.useringroup);
+                                var usergroup = new Array();
+                                var group = new Array();
+                                var ug = PathService.getUseringroupData();
+                                var test_tmp;
+                                //to retrieve group names
+                                var g=PathService.getUsergroupData();
+                                if (angular.isObject(g)){
+                                    for (var k in g){
+                                        if (angular.isDefined(g[criterion.data])){
+                                            group.push(g[criterion.data]);
+                                            break;
+                                        }
+                                    }
+                                }
+                                //to retrieve user group names
+                                for (var group in ug) {
+                                    usergroup.push(ug[group]);
+                                    test_tmp=(criterion.data===group);
+                                    if (test_tmp == true){test = true;}
+                                }
+                                data=Translator.trans('condition_criterion_test_usergroup', {activityGroup:criterion.data, userGroup:usergroup.join(",")}, 'path_wizards');
                                 break;
                             default:break;
                         }
                     }
-//console.log('resultat ');console.log(test);
+                    criterialist.push(Translator.trans(data, {}, 'path_wizards'));
                     return test;
                 },
 

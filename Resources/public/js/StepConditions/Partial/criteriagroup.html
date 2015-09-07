@@ -19,7 +19,7 @@
 
     <!-- criterion Block, recursive generation -->
     <ul class="criterion">
-        <li data-ng-repeat="criterion in group.criterion"
+        <li data-ng-repeat="(critIndex, criterion) in group.criterion" class="condition-criterion"
             data-ng-include="stepConditionsEditCtrl.webDir + 'bundles/innovapath/js/StepConditions/Partial/criterion.html'">
         </li>
     </ul>

@@ -4,12 +4,16 @@ close_summary: Close summary
 copy: copy
 
 condition_access: Access condition for
+condition_and: AND
 condition_condition_delete: Delete condition
 condition_criterion_add : Add a criterion
 condition_criteria_group_add : Add a criteria group
 condition_criteria_group_delete : Delete criteria group
 condition_criterion_choice: Your choice
 condition_criterion_delete: Delete criterion
+condition_criterion_test_repetition: Activity must be tried %activityRep% times, now you tried it %userRep% times
+condition_criterion_test_status: Activity status must be %activityStatus%, now it is %userStatus%
+condition_criterion_test_usergroup : You have to belong to group %activityGroup%, now you belong to the group %userGroup%
 condition_criterion_type_activityrepetition: Activity repetition
 condition_criterion_type_activitystatus: Activity status
 condition_criterion_type_usergroup: User group
@@ -22,6 +26,7 @@ condition_delete_confirm: Warning you're about to delete the condition. Without 
 condition_delete: Delete
 condition_init_conditionstructure: Initialize a condition to access the step
 condition_no_conditionstructure : No condition is set for the step
+condition_or: OR
 criteriagroup_delete_title: Delete this criteria group
 criteriagroup_delete_confirm: Do you really want to delete this criteria group ? This will delete all criteria from this group and all the children criteria groups
 criteriagroup_delete: Delete
@@ -108,7 +113,8 @@ see_step_siblings: See siblings of the step
 select_activity: Select existing activity
 show_path_info: Show information o the Path
 sidebar_close: Close
-step_access_denied: You didn't match the condition to access this step %stepName%
+step_access_denied: You didn't pass the previous steps
+step_access_denied_condition: You didn't match the condition to access this step %stepName% because %conditionList%
 step_access_denied_no_activity_set: You can't access the step %stepName% because no activity has been set up for it. Please contact the workspace manager
 step_add_child: Add a step
 step_copy: Copy
