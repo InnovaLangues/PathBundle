@@ -3,6 +3,7 @@
 namespace Innova\PathBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Innova\PathBundle\Entity\Criteriagroup;
 
 /**
  * Criterion
@@ -39,7 +40,7 @@ class Criterion implements \JsonSerializable
      * Criteriagroup
      * @var \Innova\PathBundle\Entity\Criteriagroup
      *
-     * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Criteriagroup", inversedBy="criteria")
+     * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Criteriagroup", inversedBy="criteria", cascade={"persist"})
      */
     protected $criteriagroup;
 

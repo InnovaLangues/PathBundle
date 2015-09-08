@@ -4,7 +4,8 @@ namespace Innova\PathBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-
+use Innova\PathBundle\Entity\Criterion;
+use Innova\PathBundle\Entity\StepCondition;
 /**
  * Criteriagroup
  *
@@ -34,8 +35,8 @@ class Criteriagroup implements \JsonSerializable
      * Parent criteriagroup
      * @var \Innova\PathBundle\Entity\Criteriagroup
      *
-     * @ORM\ManyToOne(targetEntity="Criteriagroup", inversedBy="children")
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\ManyToOne(targetEntity="Criteriagroup", inversedBy="children", cascade={"all"})
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      */
     protected $parent;
 
@@ -60,7 +61,7 @@ class Criteriagroup implements \JsonSerializable
      * Criteria linked to the criteriagroup
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\Criterion", mappedBy="criteriagroup", indexBy="id", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\Criterion", mappedBy="criteriagroup", indexBy="id", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     protected $criteria;
 
@@ -282,29 +283,5 @@ class Criteriagroup implements \JsonSerializable
         }
 
         return $jsonArray;
-    }
-
-    /**
-     * Add criterium
-     *
-     * @param \Innova\PathBundle\Entity\Criterion $criterium
-     *
-     * @return Criteriagroup
-     */
-    public function addCriterium(\Innova\PathBundle\Entity\Criterion $criterium)
-    {
-        $this->criteria[] = $criterium;
-
-        return $this;
-    }
-
-    /**
-     * Remove criterium
-     *
-     * @param \Innova\PathBundle\Entity\Criterion $criterium
-     */
-    public function removeCriterium(\Innova\PathBundle\Entity\Criterion $criterium)
-    {
-        $this->criteria->removeElement($criterium);
     }
 }

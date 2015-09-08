@@ -186,12 +186,12 @@
                     var criteriagroups=step.condition.criteriagroups;
                     this.evaluation = evaluation;
                     criterialist = new Array();
-                    criterialist.push("[");
+                    criterialist.push("<ul>");
                     //criteriagroup : OR test
                     for(var i=0;i<criteriagroups.length;i++){
                         result=this.testCriteriagroup(criteriagroups[i])||result;
                     }
-                    criterialist.push("]");
+                    criterialist.push("</ul>");
                     return result;
                 },
                 /**
@@ -201,29 +201,29 @@
                  * @returns {boolean}
                  */
                 testCriteriagroup: function testCriteriagroup(cgroup) {
-                    criterialist.push("(");
+                    criterialist.push("<li>");
                     var result=true;
                     //First, get all the criteria from this group
                     var crit=cgroup.criterion;
-                    criterialist.push("(");
+                    criterialist.push("<ul>");
                     //test all criteria of the criteriagroup : AND TEST
                     var cl= crit.length;
                     for(var i=0;i<cl;i++){
                         result=this.testCriterion(crit[i])&&result;
                         if (i<cl-1){criterialist.push(Translator.trans('condition_and', {}, 'path_wizards'));}
                     }
-                    criterialist.push(")");
+                    criterialist.push("</ul>");
                     var cgl=cgroup.criteriagroup.length;
                     if(cgl>0){
-                        criterialist.push(Translator.trans('condition_or', {}, 'path_wizards')+ "(");
+                        criterialist.push(Translator.trans('condition_or', {}, 'path_wizards')+ "<ul>");
                         //then test all criteriagroup inside this criteriagroup (recursive part) : OR test
                         for(var j=0;j<cgl;j++){
                             result=this.testCriteriagroup(cgroup.criteriagroup[j])||result;
                             if (j<cgl-1){criterialist.push(Translator.trans('condition_or', {}, 'path_wizards'));}
                         }
-                        criterialist.push(")");
+                        criterialist.push("</ul>");
                     }
-                    criterialist.push(")");
+                    criterialist.push("</li>");
                     return result;
                 },
                 /**
@@ -274,7 +274,7 @@
                             default:break;
                         }
                     }
-                    criterialist.push(Translator.trans(data, {}, 'path_wizards'));
+                    criterialist.push(Translator.trans("<li>"+data+"</li>", {}, 'path_wizards'));
                     return test;
                 },
 
