@@ -201,29 +201,29 @@
                  * @returns {boolean}
                  */
                 testCriteriagroup: function testCriteriagroup(cgroup) {
-                    criterialist.push("<li>");
                     var result=true;
                     //First, get all the criteria from this group
                     var crit=cgroup.criterion;
-                    criterialist.push("<ul>");
                     //test all criteria of the criteriagroup : AND TEST
                     var cl= crit.length;
                     for(var i=0;i<cl;i++){
                         result=this.testCriterion(crit[i])&&result;
-                        if (i<cl-1){criterialist.push(Translator.trans('condition_and', {}, 'path_wizards'));}
+                        if (i<cl-1){criterialist.push("<li>"+Translator.trans('condition_and', {}, 'path_wizards')+"</li>");}
                     }
-                    criterialist.push("</ul>");
                     var cgl=cgroup.criteriagroup.length;
                     if(cgl>0){
-                        criterialist.push(Translator.trans('condition_or', {}, 'path_wizards')+ "<ul>");
+                        criterialist.push("<li>"+Translator.trans('condition_or', {}, 'path_wizards')+ "<ul>");
                         //then test all criteriagroup inside this criteriagroup (recursive part) : OR test
                         for(var j=0;j<cgl;j++){
                             result=this.testCriteriagroup(cgroup.criteriagroup[j])||result;
-                            if (j<cgl-1){criterialist.push(Translator.trans('condition_or', {}, 'path_wizards'));}
+                            if (j<cgl-1){
+                                criterialist.push("<li>"+Translator.trans('condition_or', {}, 'path_wizards')+"<ul>");
+                            }else{
+                                criterialist.push("</ul></li>");
+                            }
                         }
-                        criterialist.push("</ul>");
+                        criterialist.push("</ul></li>");
                     }
-                    criterialist.push("</li>");
                     return result;
                 },
                 /**

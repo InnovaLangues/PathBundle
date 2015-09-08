@@ -35,8 +35,8 @@ class Criteriagroup implements \JsonSerializable
      * Parent criteriagroup
      * @var \Innova\PathBundle\Entity\Criteriagroup
      *
-     * @ORM\ManyToOne(targetEntity="Criteriagroup", inversedBy="children", cascade={"all"})
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Criteriagroup", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $parent;
 

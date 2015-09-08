@@ -4,6 +4,8 @@ namespace Innova\PathBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Innova\PathBundle\Entity\Step;
+use Innova\PathBundle\Entity\Criteriagroup;
 
 /**
  * StepCondition

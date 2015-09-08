@@ -4,6 +4,7 @@ namespace Innova\PathBundle\Manager;
 
 use Claroline\CoreBundle\Manager\RightsManager;
 use Doctrine\Common\Persistence\ObjectManager;
+use Innova\PathBundle\Entity\Criterion;
 use Innova\PathBundle\Entity\Criteriagroup;
 use Innova\PathBundle\Entity\InheritedResource;
 use Innova\PathBundle\Entity\Path\Path;
@@ -115,9 +116,9 @@ class PublishingManager
         $this->pathStructure = json_decode($pathStructure);
         $this->path         = $path;
         $this->uniqId2step  = array();
-        $this->uniqId2sc   = array();
-        $this->uniqId2cg   = array();
-        $this->uniqId2crit = array();
+        $this->uniqId2sc    = array();
+        $this->uniqId2cg    = array();
+        $this->uniqId2crit  = array();
 
         return $this;
     }
@@ -132,9 +133,9 @@ class PublishingManager
         $this->path          = null;
         $this->pathStructure = null;
         $this->uniqId2step   = array();
-        $this->uniqId2sc    = array();
-        $this->uniqId2cg    = array();
-        $this->uniqId2crit  = array();
+        $this->uniqId2sc     = array();
+        $this->uniqId2cg     = array();
+        $this->uniqId2crit   = array();
 
         return $this;
     }
@@ -158,7 +159,7 @@ class PublishingManager
 
         // Publish steps for this path
         $toProcess = !empty($this->pathStructure->steps) ? $this->pathStructure->steps : array();
-//echo "JSON steps : <br>\n";var_dump($this->pathStructure->steps);
+/*//echo "JSON steps : <br>\n";var_dump($this->pathStructure->steps);*/
         $publishedSteps = $this->publishSteps(0, null, $toProcess);
 
         // Clean steps to remove
@@ -474,15 +475,17 @@ class PublishingManager
     protected function publishStepConditions(Step $stepDB, \stdClass $stepJS = null)
     {
         //retrieve condition from DB
-        $existingCondition = array($stepDB->getCondition());
+        $existingCondition = $stepDB->getCondition();
+        $processedCondition = array();
 
         if (isset($stepJS->condition))
         {
             //retrieve the condition
             $conditionJS = $stepJS->condition;
 
-            // Current criteriagroup has never been published or criteriagroup entity has been deleted => create it
-            if (empty($conditionJS->scid) || !$existingCondition->containsKey($conditionJS->scid))
+            // Current condition has never been published or condition entity has been deleted => create it
+            if (empty($conditionJS->scid)
+                || ($existingCondition->getId() != $conditionJS->scid))
             {
 //echo "create condition <br>\n";
                 $publishedCondition = $this->stepConditionsManager->createStepCondition($stepDB);
@@ -494,20 +497,25 @@ class PublishingManager
             else
             {
 //echo "update condition <br>\n";
-                $publishedCondition = $existingCondition->getStepCondition($conditionJS->scid);
+                $publishedCondition = $this->getStepCondition($conditionJS->scid);
                 $publishedCondition = $this->stepConditionsManager->editStepCondition($stepDB, $publishedCondition);
             }
-
+            $processedCondition[] = $publishedCondition;
 //echo "manage criteriagroups <br>\n";
+
             //manage criteriagroups
+            $existingCriteriagroups = $publishedCondition->getCriteriagroups()->toArray();
             $publishedCriteriagroup = $this->publishCriteriagroups($publishedCondition, 0, null, $conditionJS->criteriagroups);
+//echo "Clean criteriagroup to remove <br>\n";
+            // Clean criteriagroup to remove
+            $this->cleanCriteriagroup($publishedCriteriagroup, $existingCriteriagroups, $publishedCondition);
 
 //echo "Clean Condition to remove <br>\n";
             // Clean Condition to remove
             if (is_object($existingCondition))
                 $this->cleanCondition($publishedCondition, $existingCondition, $stepDB);
         }
-        return true;
+        return $processedCondition;
     }
 
     /**
@@ -550,23 +558,27 @@ class PublishingManager
             }
 //echo "Manage criteria <br>\n";
             // Manage criteria
+            $existingCriteria = $criteriagroupDB->getCriteria();
             $publishedCriteria = $this->publishCriteria($criteriagroupJS, $criteriagroupDB);
+//echo "Clean criteria to remove <br>\n";
+            // Clean criteria to remove
+            $this->cleanCriteria($publishedCriteria, $existingCriteria->toArray(), $criteriagroupDB);
 
             // Store criteriagroup to know it doesn't have to be deleted when we will clean the condition
             $processedCriteriagroups[] = $criteriagroupDB;
 
             //Check children criteriagroup
-            $childrenLevel = $level + 1;
-            $childrenCriteriagroups = $this->publishCriteriagroups($conditionDB, $childrenLevel, $criteriagroupDB, $criteriagroupJS->criteriagroup);
+            if (!empty($criteriagroupJS->criteriagroup))
+            {
+                $childrenLevel = $level + 1;
+                $childrenCriteriagroups = $this->publishCriteriagroups($conditionDB, $childrenLevel, $criteriagroupDB, $criteriagroupJS->criteriagroup);
 
-            // Store children criteriagroup
-            $processedCriteriagroups = array_merge($processedCriteriagroups, $childrenCriteriagroups);
+                // Store children criteriagroup
+                $processedCriteriagroups = array_merge($processedCriteriagroups, $childrenCriteriagroups);
+            }
 
             $currentOrder++;
         }
-//echo "Clean criteriagroup to remove <br>\n";
-        // Clean criteriagroup to remove
-        $this->cleanCriteriagroup($processedCriteriagroups, $existingCriteriagroups->toArray(), $conditionDB);
 
         return $processedCriteriagroups;
     }
@@ -609,9 +621,6 @@ class PublishingManager
             // Store criteria to know it doesn't have to be deleted when we will clean the condition
             $processedCriteria[] = $criterionDB;
         }
-//echo "Clean criteria to remove <br>\n";
-        // Clean criteria to remove
-        $this->cleanCriteria($processedCriteria, $existingCriteria->toArray(), $criteriagroupDB);
 
         return $processedCriteria;
     }
@@ -619,19 +628,18 @@ class PublishingManager
     /**
      * Clean conditions data which no long exist in the current path
      *
-     * @param array $neededData
-     * @param array $existingData
+     * @param array $neededCondition
+     * @param array $existingCondition
      * @param Step $step
      * @return PublishingManager
      */
-    protected function cleanCondition($neededData = null, $existingData = null, Step $step)
+    protected function cleanCondition($neededCondition = null, $existingCondition = null, Step $step)
     {
-//echo "inside cleanCondition";
-//echo "typeof(existingData)";var_dump(is_object($existingData));
-//echo "typeof(neededData)";var_dump(is_object($neededData));
-        if ($existingData->getId() != $neededData->getId()) {
-            $step->removeCondition($neededData);
-            $this->om->remove($neededData);
+//echo "inside cleanCondition<br>\n";
+//echo "typeof(existingData)";var_dump(is_object($existingCondition));//echo "<br>\ntypeof(neededData)";var_dump(is_object($neededCondition));
+        if ($existingCondition->getId() != $neededCondition->getId()) {
+            $step->removeCondition($neededCondition);
+            $this->om->remove($neededCondition);
         }
 
         return $this;
@@ -640,30 +648,30 @@ class PublishingManager
     /**
      * Clean criteriagroups data which no long exist in the current condition
      *
-     * @param array $neededData
-     * @param array $existingData
+     * @param array $neededCriteriagroup
+     * @param array $existingCriteriagroup
      * @param StepCondition $stepCondition
-     * @return $this
+     * @return PublishingManager
      */
-    protected function cleanCriteriagroup(array $neededData = array(), array $existingData = array(), StepCondition $stepCondition)
+    protected function cleanCriteriagroup(array $neededCriteriagroup = array(), array $existingCriteriagroup = array(), StepCondition $stepCondition)
     {
-//echo "inside cleanCriteriagroup";
-        $toRemove = array_filter($existingData, function (Criteriagroup $current) use ($neededData) {
-//echo "inside cleanCriteriagroup closure";
-            $removeData = true;
-            foreach ($neededData as $data) {
+//echo "inside cleanCriteriagroup<br>\n";
+        $toRemove = array_filter($existingCriteriagroup, function (Criteriagroup $current) use ($neededCriteriagroup) {
+//echo "inside cleanCriteriagroup closure<br>\n";
+            $removeCriteriagroup = true;
+            foreach ($neededCriteriagroup as $data) {
                 if ($current->getId() == $data->getId()) {
-                    $removeData = false;
+                    $removeCriteriagroup = false;
                     break;
                 }
             }
 
-            return $removeData;
+            return $removeCriteriagroup;
         });
 
-        foreach ($toRemove as $dataToRemove) {
-            $stepCondition->removeCriteriagroup($dataToRemove);
-            $this->om->remove($dataToRemove);
+        foreach ($toRemove as $criteriagroupToRemove) {
+            $stepCondition->removeCriteriagroup($criteriagroupToRemove);
+            $this->om->remove($criteriagroupToRemove);
         }
 
         return $this;
@@ -672,30 +680,30 @@ class PublishingManager
     /**
      * Clean criteria data which no long exist in the current criteriagroup
      *
-     * @param array $neededData
-     * @param array $existingData
+     * @param array $neededCriteria
+     * @param array $existingCriteria
      * @param Criteriagroup $criteriagroup
-     * @return $this
+     * @return PublishingManager
      */
-    protected function cleanCriteria(array $neededData = array(), array $existingData = array(), Criteriagroup $criteriagroup)
+    protected function cleanCriteria(array $neededCriteria = array(), array $existingCriteria = array(), Criteriagroup $criteriagroup)
     {
-//echo "inside cleanCriteria";
-        $toRemove = array_filter($existingData, function (Criterion $current) use ($neededData) {
-//echo "inside cleanCriteria closure";
-            $removeData = true;
-            foreach ($neededData as $data) {
+//echo "inside cleanCriteria<br>\n";
+        $toRemove = array_filter($existingCriteria, function (Criterion $current) use ($neededCriteria) {
+//echo "inside cleanCriteria closure<br>\n";
+            $removeCriterion = true;
+            foreach ($neededCriteria as $data) {
                 if ($current->getId() == $data->getId()) {
-                    $removeData = false;
+                    $removeCriterion = false;
                     break;
                 }
             }
 
-            return $removeData;
+            return $removeCriterion;
         });
 
-        foreach ($toRemove as $dataToRemove) {
-            $criteriagroup->removeCriterion($dataToRemove);
-            $this->om->remove($dataToRemove);
+        foreach ($toRemove as $criterionToRemove) {
+            $criteriagroup->removeCriterion($criterionToRemove);
+            $this->om->remove($criterionToRemove);
         }
 
         return $this;

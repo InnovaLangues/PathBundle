@@ -3,6 +3,7 @@
 namespace Innova\PathBundle\Manager;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\StepCondition;
 use Innova\PathBundle\Entity\Criterion;
