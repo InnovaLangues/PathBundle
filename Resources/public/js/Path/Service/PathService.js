@@ -46,6 +46,7 @@
 
             var usergrouplist=[];
             var evaluationstatuses=[];
+            var useringroup=[];
             var deferred = $q.defer();
 
             //expose the promises
@@ -59,15 +60,24 @@
                     evaluationstatuses = response;
                     deferred.resolve(response);
                 });
+            var useringrouppromise = $http.get(Routing.generate('innova_path_criteria_groupsforuser', {}))
+                .success(function (response) {
+                    useringroup = response;
+                    deferred.resolve(response);
+                });
             return {
                 usergrouppromise:usergrouppromise,
                 evaluationstatusespromise:evaluationstatusespromise,
+                useringrouppromise:useringrouppromise,
                 //create a get method for the variable to retrieve
                 getUsergroupData:function getUsergroupData(){
                     return usergrouplist;
                 },
                 getEvaluationStatusesData:function getEvaluationStatusesData(){
                     return evaluationstatuses;
+                },
+                getUseringroupData:function getUseringroupData(){
+                    return useringroup;
                 },
                 /**
                  * get list of all child steps of a step
@@ -142,7 +152,9 @@
                 initializeFromTemplate: function initializeFromTemplate() {
 
                 },
-
+                conditionValidityCheck: function conditionValidityCheck() {
+                    return true;
+                },
                 /**
                  * Save modification to DB
                  */
@@ -345,7 +357,7 @@
                     if (steps.length>0){
                         for(var i=0;i<steps.length;i++){
                             activity = steps[i].activityId;
-                            evaluations.push({"step":steps[i].id,"eval":this.getEvaluationFromController(activity)});
+                            evaluations.push({"step":steps[i].id,"eval":this.stepConditionsService.getActivityEvaluation(activity)});
                         }
                     }
                     return evaluations;
