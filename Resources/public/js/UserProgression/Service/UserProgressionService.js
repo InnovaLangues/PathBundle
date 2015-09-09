@@ -98,7 +98,7 @@
                                 progression[response.stepId].status = response.status;
                                 progression[response.stepId].authorized = response.authorized;
                             }
-
+                            console.log("response");console.log(response);
                             deferred.resolve(response.status);
                         })
 

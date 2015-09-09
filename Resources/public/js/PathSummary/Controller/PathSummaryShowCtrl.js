@@ -89,7 +89,9 @@ PathSummaryShowCtrl.prototype.goTo = function goTo(step) {
                                     }.bind(this));          //important, to keep the scope
                                     // validate condition on previous step ? NO
                                 } else {
-                                    this.alertService.addAlert('error', Translator.trans('step_access_denied', {stepName: step.name}, 'path_wizards'));
+                                    var conditionlist=this.stepConditionsService.getConditionList();
+                                    //display error
+                                    this.alertService.addAlert('error', Translator.trans('step_access_denied_condition', {stepName: step.name, conditionList: conditionlist}, 'path_wizards'));
                                 }
                             }.bind(this),
                             function (error) {
@@ -106,7 +108,8 @@ PathSummaryShowCtrl.prototype.goTo = function goTo(step) {
                     }
                     //is there a flag authorized on previous step ? NO => no access => message
                 } else {
-                    this.alertService.addAlert('error', Translator.trans('step_access_denied', {stepName: step.name}, 'path_wizards'));
+                    //display error
+                    this.alertService.addAlert('error', Translator.trans('step_access_denied', {}, 'path_wizards'));
                 }
             }
         }
