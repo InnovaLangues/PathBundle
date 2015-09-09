@@ -76,12 +76,12 @@
                 <!-- Primary resource -->
                 <resources-primary-edit data-resources="stepEditCtrl.step.primaryResource"></resources-primary-edit>
 
-                <!-- Conditions -->
+<!-- Conditions -->
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title" data-ng-click="stepEditCtrl.collapsedPanels.conditions = !stepEditCtrl.collapsedPanels.conditions">
                             <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': stepEditCtrl.collapsedPanels.conditions, 'fa-caret-down': !stepEditCtrl.collapsedPanels.conditions }"></span>
-                            {{ 'condition_access'|trans:{}:'path_wizards' }} {{stepEditCtrl.step.name}}
+                            {{ 'condition_access'|trans:{}:'path_wizards' }} x{{stepEditCtrl.nextstep.name}}
                         </h4>
                     </div>
 
@@ -89,7 +89,7 @@
                         <step-conditions-edit data-title="pathEditCtrl.path.name"></step-conditions-edit>
                     </div>
                 </div>
-                <!-- /Conditions -->
+<!-- /Conditions -->
 
                 <!-- Properties -->
                 <div class="panel panel-default">
