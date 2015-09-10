@@ -1,5 +1,5 @@
 <div>
-
+    <div class="padding-md alert-danger text-center" data-ng-if="stepConditionsEditCtrl.step.primaryResource.length === 0">{{ 'condition_step_no_activity'|trans:{}:'path_wizards' }}</div>
     <!-- display these buttons only when a condition is created -->
     <div class="btn-group" role="group" data-ng-if="stepConditionsEditCtrl.conditionstructure.length !== 0">
 <!--
