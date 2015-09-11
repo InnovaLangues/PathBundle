@@ -1,9 +1,9 @@
 /**
  * Class constructor
- * @returns {PathNavigationCtrl}
+ * @returns {PathNavigationBaseCtrl}
  * @constructor
  */
-var PathNavigationCtrl = function PathNavigationCtrl($routeParams, $scope, PathService) {
+var PathNavigationBaseCtrl = function PathNavigationBaseCtrl($routeParams, $scope, PathService) {
     this.pathService = PathService;
 
     this.current = $routeParams;
@@ -27,30 +27,30 @@ var PathNavigationCtrl = function PathNavigationCtrl($routeParams, $scope, PathS
  * Current matched route
  * @type {object}
  */
-PathNavigationCtrl.prototype.current = {};
+PathNavigationBaseCtrl.prototype.current = {};
 
 /**
  * Current displayed step
  * @type {object}
  */
-PathNavigationCtrl.prototype.step = {};
+PathNavigationBaseCtrl.prototype.step = {};
 
 /**
  * Parents of the current step
  * @type {object}
  */
-PathNavigationCtrl.prototype.parents = {};
+PathNavigationBaseCtrl.prototype.parents = {};
 
 /**
  * Current state of the summary
  * @type {object}
  */
-PathNavigationCtrl.prototype.summaryState = {};
+PathNavigationBaseCtrl.prototype.summaryState = {};
 
 /**
  * Reload the Step from route params
  */
-PathNavigationCtrl.prototype.reloadStep = function reloadStep() {
+PathNavigationBaseCtrl.prototype.reloadStep = function reloadStep() {
     this.step = null;
 
     // Get step
@@ -71,6 +71,6 @@ PathNavigationCtrl.prototype.reloadStep = function reloadStep() {
 /**
  * Allow toggle Summary from the current step
  */
-PathNavigationCtrl.prototype.toggleSummary = function toggleSummary() {
+PathNavigationBaseCtrl.prototype.toggleSummary = function toggleSummary() {
     this.pathService.toggleSummaryState();
 };

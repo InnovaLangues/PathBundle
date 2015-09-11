@@ -2,8 +2,15 @@
     <!-- Summary of the Path-->
     <path-summary-show data-title="pathShowCtrl.path.name" data-ng-if="pathShowCtrl.path.steps.length !== 0"></path-summary-show>
 
+	<div class="row">
+        <p class="navbar-text navbar-right">
+            <!-- User messages -->
+            <alert-box></alert-box>
+        </p>
+    </div>
+
     <!-- Breadcrumbs -->
-    <path-navigation data-ng-if="pathShowCtrl.path.breadcrumbs && pathShowCtrl.path.steps.length !== 0"></path-navigation>
+    <path-navigation data-ng-if="pathShowCtrl.path.breadcrumbs"></path-navigation>
 
     <button type="button" class="btn btn-primary btn-path-edit pull-right" data-ng-if="pathShowCtrl.path.steps.length !== 0 && pathShowCtrl.editEnabled" data-ng-click="pathShowCtrl.edit()">
         <span class="fa fa-pencil"></span>
