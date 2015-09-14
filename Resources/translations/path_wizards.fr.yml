@@ -14,9 +14,11 @@ condition_criterion_delete: Supprimer le critère
 condition_criterion_test_repetition: L'activité doit être tenté %activityRep% fois, actuellement vous l'avez tenté %userRep% fois
 condition_criterion_test_status: Le statut de l'activité doit être %activityStatus%, actuellement il est %userStatus%
 condition_criterion_test_usergroup : Vous devez appartenir au groupe %activityGroup%, actuellement vous appartenez au groupe %userGroup%
+condition_criterion_test_userteam : Vous devez appartenir à l'équipe %activityTeam%, actuellement vous appartenez à l'équipe %userTeam%
 condition_criterion_type_activityrepetition: Répétition de l'activité
 condition_criterion_type_activitystatus: Status de l'activité
 condition_criterion_type_usergroup: Groupe d'utilisateur
+condition_criterion_type_userteam: Equipe d'utilisateur
 condition_criterion_activityrepetition: Nombre de fois où l'activité a été effectuée
 condition_criterion_activitystatus: Statut de l'activité
 condition_criterion_usergroup: Utilisateur appartient au groupe

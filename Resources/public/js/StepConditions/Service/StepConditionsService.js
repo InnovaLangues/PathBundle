@@ -271,6 +271,29 @@
                                 }
                                 data=Translator.trans('condition_criterion_test_usergroup', {activityGroup:criterion.data, userGroup:usergroup.join(",")}, 'path_wizards');
                                 break;
+                            case"userteam":
+                                var userteam = new Array();
+                                var team = new Array();
+                                var ut = PathService.getUserinteamData();
+                                var test_tmp;
+                                //to retrieve team names
+                                var t=PathService.getUserteamData();
+                                if (angular.isObject(t)){
+                                    for (var k in t){
+                                        if (angular.isDefined(t[criterion.data])){
+                                            team.push(t[criterion.data]);
+                                            break;
+                                        }
+                                    }
+                                }
+                                //to retrieve user team names
+                                for (var team in ut) {
+                                    userteam.push(ut[team]);
+                                    test_tmp=(criterion.data===team);
+                                    if (test_tmp == true){test = true;}
+                                }
+                                data=Translator.trans('condition_criterion_test_userteam', {activityTeam:criterion.data, userTeam:userteam.join(",")}, 'path_wizards');
+                                break;
                             default:break;
                         }
                     }

@@ -216,6 +216,9 @@ class StepManager
         $where = !empty($stepStructure->where) ? $stepStructure->where : null;
         $parameters->setWhere($where);
 
+        $evaluationType = !empty($stepStructure->evaluationType) ? $stepStructure->evaluationType : null;
+        $parameters->setEvaluationType($evaluationType);
+
         // Set resources
         $this->updateSecondaryResources($parameters, $stepStructure);
 

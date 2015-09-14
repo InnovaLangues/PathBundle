@@ -45,8 +45,10 @@
             var evaluations = [];
 
             var usergrouplist=[];
+            var userteamlist=[];
             var evaluationstatuses=[];
             var useringroup=[];
+            var userinteam=[];
             var deferred = $q.defer();
 
             //expose the promises
@@ -65,10 +67,25 @@
                     useringroup = response;
                     deferred.resolve(response);
                 });
+            var userteampromise;
             return {
                 usergrouppromise:usergrouppromise,
                 evaluationstatusespromise:evaluationstatusespromise,
                 useringrouppromise:useringrouppromise,
+                userteampromise:function userteampromise(pathid) {
+                    var deferred = $q.defer();
+                    var params = {'id':id};
+                    $http
+                        .get(Routing.generate('innova_path_criteria_teamsforws', params))
+                        .success(function (response) {
+                            this.userteamlist = response;
+                            deferred.resolve(response);
+                        }.bind(this))
+                        .error(function (response) {
+                            deferred.reject(response);
+                        });
+                    return deferred.promise;
+                },
                 //create a get method for the variable to retrieve
                 getUsergroupData:function getUsergroupData(){
                     return usergrouplist;
@@ -78,6 +95,12 @@
                 },
                 getUseringroupData:function getUseringroupData(){
                     return useringroup;
+                },
+                getUserteamData:function getUserteamData(){
+                    return userteamlist;
+                },
+                getUserinteamData:function getUserinteamData(){
+                    return userinteam;
                 },
                 /**
                  * get list of all child steps of a step

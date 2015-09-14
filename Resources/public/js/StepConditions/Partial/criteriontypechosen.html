@@ -1,3 +1,14 @@
+<!-- if userteam is chosen -->
+<div data-ng-switch-when="userteam">
+    <label class="control-label col-md-4 required ng-binding">{{ 'condition_criterion_userteam'|trans:{}:'path_wizards' }} :</label>
+    <div class="col-md-8 criterion-userteam">
+        <select name="criterion-userteam" id="criterion-userteam-{{group.lvl}}-{{critIndex}}"
+                data-ng-class="criterion-userteam" data-ng-model="criterion.data"
+                data-ng-options="k as v for (k, v) in stepConditionsEditCtrl.criterionUserteam">
+            <option value="">{{'condition_criterion_choice'|trans:{}:'path_wizards' }}</option>
+        </select>
+    </div>
+</div>
 <!-- if usergroup is chosen -->
 <div data-ng-switch-when="usergroup">
     <label class="control-label col-md-4 required ng-binding">{{ 'condition_criterion_usergroup'|trans:{}:'path_wizards' }} :</label>

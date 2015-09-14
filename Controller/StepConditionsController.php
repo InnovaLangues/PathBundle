@@ -2,6 +2,7 @@
 
 namespace Innova\PathBundle\Controller;
 
+use Claroline\TeamBundle\Manager\TeamManager;
 use Symfony\Component\BrowserKit\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -34,6 +35,7 @@ class StepConditionsController extends Controller
     private $om;
     private $groupManager;
     private $evaluationRepo;
+    private $teamManager;
     /**
      * Security Token
      * @var \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $securityToken
@@ -46,16 +48,19 @@ class StepConditionsController extends Controller
      * @param ObjectManager $objectManager
      * @param GroupManager $groupManager
      * @param TokenStorageInterface $securityToken
+     * @param TeamManager $teamManager
      */
     public function __construct(
         ObjectManager $objectManager,
         GroupManager $groupManager,
-        TokenStorageInterface $securityToken
+        TokenStorageInterface $securityToken,
+        TeamManager $teamManager
     )
     {
-        $this->groupManager = $groupManager;
-        $this->om = $objectManager;
-        $this->securityToken   = $securityToken;
+        $this->groupManager  = $groupManager;
+        $this->om            = $objectManager;
+        $this->securityToken = $securityToken;
+        $this->teamManager   = $teamManager;
     }
     /**
      * Get user group for criterion
@@ -242,5 +247,63 @@ class StepConditionsController extends Controller
         }
 
         return new JsonResponse($jsonresults);
+    }
+
+    /**
+     * Get list of teams for current WS
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     *
+     * @Route(
+     *     "/teamsforws/{id}",
+     *     name         = "innova_path_criteria_teamsforws",
+     *     options      = { "expose" = true }
+     * )
+     * @Method("GET")
+     */
+    public function getTeamsForWs($id)
+    {
+        //retrieve current workspace
+        $workspace = $this->om->getRepository("InnovaPathBundle:Path\Path")->findOneById($id)->getWorkspace();
+        //$workspace = $this->om->getRepository("ClarolineCoreBundle:Resource\ResourceNode")->findOneById($id)->getWorkspace();
+        $data = array();
+        //retrieve list of groups object for this user
+        $teamsforws = $this->teamManager->getTeamsByWorkspace($workspace);
+        if ($teamsforws != null) {
+            //data needs to be explicitly set because Team does not extends Serializable
+            foreach($teamsforws as $tw) {
+                $data[$tw->getId()] = $tw->getName();
+            }
+        }
+        return new JsonResponse($data);
+    }
+
+    /**
+     * Get list of teams a user belongs to
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     *
+     * @Route(
+     *     "/teamsforuser",
+     *     name         = "innova_path_criteria_teamsforuser",
+     *     options      = { "expose" = true }
+     * )
+     * @Method("GET")
+     */
+    public function getTeamsForUser()
+    {
+        //retrieve current user
+        $user = $this->securityToken->getToken()->getUser();
+        $userId = $user->getId();
+        $data = array();
+        //retrieve list of team object for this user
+        $teamforuser = $this->teamManager->getTeamsByUser($user, 'name', 'ASC', true);
+        if ($teamforuser != null) {
+            //data needs to be explicitly set because Team does not extends Serializable
+            foreach($teamforuser as $tu) {
+                $data[$tu->getId()] = $tu->getName();
+            }
+        }
+        return new JsonResponse($data);
     }
 }

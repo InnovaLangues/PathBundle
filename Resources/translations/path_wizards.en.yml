@@ -14,9 +14,11 @@ condition_criterion_delete: Delete criterion
 condition_criterion_test_repetition: Activity must be tried %activityRep% times, now you tried it %userRep% times
 condition_criterion_test_status: Activity status must be %activityStatus%, now it is %userStatus%
 condition_criterion_test_usergroup : You have to belong to group %activityGroup%, now you belong to the group %userGroup%
+condition_criterion_test_userteam : You have to belong to team %activityTeam%, now you belong to the team %userTeam%
 condition_criterion_type_activityrepetition: Activity repetition
 condition_criterion_type_activitystatus: Activity status
 condition_criterion_type_usergroup: User group
+condition_criterion_type_userteam: User team
 condition_criterion_type: Criterion type
 condition_criterion_activityrepetition: Times the activity has been performed
 condition_criterion_activitystatus: The activity has status

@@ -20,11 +20,12 @@ var StepConditionsEditCtrl = function StepConditionsEditCtrl($route, $routeParam
     //default values for conditions
     //values for user group list
     this.criterionUsergroup = this.pathService.getUsergroupData();
+    //values for user team list
+    this.criterionUserteam = this.pathService.getUserteamData();
 
     //values for activity statuses (here got from AJAX request, +(maybe hardcode the list in partial for better performance...)
     this.criterionActivitystatuses=this.pathService.getEvaluationStatusesData();
 
-    console.log(this.step);
     this.criterionActivitystatus = 'passed';
     this.criterionActivityrepetition = 1;
     this.criterion = {};
