@@ -77,7 +77,7 @@
                 <resources-primary-edit data-resources="stepEditCtrl.step.primaryResource"></resources-primary-edit>
 
 <!-- Conditions -->
-                <div class="panel panel-default">
+                <div class="panel panel-default" data-ng-if="stepEditCtrl.nextstep">
                     <div class="panel-heading">
                         <h4 class="panel-title" data-ng-click="stepEditCtrl.collapsedPanels.conditions = !stepEditCtrl.collapsedPanels.conditions">
                             <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': stepEditCtrl.collapsedPanels.conditions, 'fa-caret-down': !stepEditCtrl.collapsedPanels.conditions }"></span>
