@@ -132,6 +132,7 @@ step_description: Description
 step_drag: Move item
 step_duration: Expected duration
 step_edit: Edit step
+step_evaluation_type: Evaluation type
 step_has_duration: step has a duration
 step_no_resource: There is no resource linked to this step.
 step_paste: Paste
