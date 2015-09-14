@@ -24,6 +24,7 @@ var StepConditionsEditCtrl = function StepConditionsEditCtrl($route, $routeParam
     //values for activity statuses (here got from AJAX request, +(maybe hardcode the list in partial for better performance...)
     this.criterionActivitystatuses=this.pathService.getEvaluationStatusesData();
 
+    console.log(this.step);
     this.criterionActivitystatus = 'passed';
     this.criterionActivityrepetition = 1;
     this.criterion = {};

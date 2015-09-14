@@ -28,6 +28,7 @@ condition_init_conditionstructure: Initialiser une condition pour l'accès à l'
 condition_no_conditionstructure: Aucune condition n'est définie pour l'étape
 condition_or: OU
 condition_step_no_activity: Attention, vous n'avez pas associé d'activité à cette étape
+condition_step_activity_notmanageable : Attention, l'activité que vous avez choisi est en évaluation manuelle : vous ne pouvez utiliser les critères relatifs à une évaluation pour cette étape
 criteriagroup_delete_title: Suppression du groupe de critère
 criteriagroup_delete_confirm: Souhaitez-vous vraiment supprimer ce groupe de critères ? Cela supprimera tous les critères de ce groupe et les groupes de critères enfants
 criteriagroup_delete: Supprimer

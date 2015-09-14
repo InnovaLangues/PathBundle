@@ -28,6 +28,7 @@ condition_init_conditionstructure: Initialize a condition to access the step
 condition_no_conditionstructure : No condition is set for the step
 condition_or: OR
 condition_step_no_activity: Warning, no activity is linked to this step
+condition_step_activity_notmanageable : Warning, the activity you chose is in manual evaluation : you can't use the evaluation related criteria for this step
 criteriagroup_delete_title: Delete this criteria group
 criteriagroup_delete_confirm: Do you really want to delete this criteria group ? This will delete all criteria from this group and all the children criteria groups
 criteriagroup_delete: Delete

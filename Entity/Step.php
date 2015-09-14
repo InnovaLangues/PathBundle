@@ -523,6 +523,7 @@ class Step implements \JsonSerializable
             'who'               => null,
             'where'             => null,
             'duration'          => null, // Duration in seconds
+            'evaluationType'    => null, // automatic/manual
         );
 
         // Get activity properties
@@ -575,10 +576,11 @@ class Step implements \JsonSerializable
             }
 
             // Global Parameters
-            $jsonArray['withTutor'] = $parameters->isWithTutor();
-            $jsonArray['who']       = $parameters->getWho();
-            $jsonArray['where']     = $parameters->getWhere();
-            $jsonArray['duration']  = $parameters->getMaxDuration(); // Duration in seconds
+            $jsonArray['withTutor']      = $parameters->isWithTutor();
+            $jsonArray['who']            = $parameters->getWho();
+            $jsonArray['where']          = $parameters->getWhere();
+            $jsonArray['duration']       = $parameters->getMaxDuration(); // Duration in seconds
+            $jsonArray['evaluationType'] = $parameters->getEvaluationType(); // manual/automatic
         }
 
         // Excluded resources
