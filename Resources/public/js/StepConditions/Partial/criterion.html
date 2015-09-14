@@ -16,8 +16,8 @@
                     <option value="">{{'condition_criterion_choice'|trans:{}:'path_wizards' }}</option>
                     <option value="usergroup">{{'condition_criterion_type_usergroup'|trans:{}:'path_wizards' }}</option>
                     <option value="userteam">{{'condition_criterion_type_userteam'|trans:{}:'path_wizards' }}</option>
-                    <option value="activitystatus">{{'condition_criterion_type_activitystatus'|trans:{}:'path_wizards' }}</option>
-                    <option value="activityrepetition">{{'condition_criterion_type_activityrepetition'|trans:{}:'path_wizards' }}</option>
+                    <option value="activitystatus" data-ng-if="stepConditionsEditCtrl.step.evaluationType === 'automatic'">{{'condition_criterion_type_activitystatus'|trans:{}:'path_wizards' }}</option>
+                    <option value="activityrepetition" data-ng-if="stepConditionsEditCtrl.step.evaluationType === 'automatic'">{{'condition_criterion_type_activityrepetition'|trans:{}:'path_wizards' }}</option>
                 </select>
             </div>
         </div>
