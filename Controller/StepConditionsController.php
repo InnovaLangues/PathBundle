@@ -251,7 +251,7 @@ class StepConditionsController extends Controller
 
     /**
      * Get list of teams for current WS
-     *
+     * @param $id path_id
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      *
      * @Route(

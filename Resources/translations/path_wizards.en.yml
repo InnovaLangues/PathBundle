@@ -23,6 +23,7 @@ condition_criterion_type: Criterion type
 condition_criterion_activityrepetition: Times the activity has been performed
 condition_criterion_activitystatus: The activity has status
 condition_criterion_usergroup: User belongs to the group
+condition_criterion_userteam: User belongs to the team
 condition_delete_title: Delete the condition
 condition_delete_confirm: Warning you're about to delete the condition. Without one, all the user will be able to go to the next step
 condition_delete: Delete
@@ -121,7 +122,7 @@ select_activity: Select existing activity
 show_path_info: Show information o the Path
 sidebar_close: Close
 step_access_denied: You didn't pass the previous steps
-step_access_denied_condition: You didn't match the condition to access this step %stepName% because %conditionList%
+step_access_denied_condition: You didn't match the condition to access this step %stepName% because : %conditionList%
 step_access_denied_no_activity_set: You can't access the step %stepName% because no activity has been set up for it. Please contact the workspace manager
 step_add_child: Add a step
 step_copy: Copy

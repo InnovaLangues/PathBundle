@@ -234,6 +234,7 @@
                  */
                 testCriterion: function testCriterion(criterion) {
                     var test=false;
+                    var isok=Translator.trans('no', {}, 'path_wizards');
                     var data="";
                     //retrieve evaluation data to check against (evaluation must be retrieved when step is loaded)
                     var evaluationResultToCheck=this.getEvaluation();
@@ -241,58 +242,77 @@
                     if(angular.isDefined(evaluationResultToCheck)||criterion.type=="usergroup"){
                         switch(criterion.type){
                             case"activityrepetition":
-                                test=(criterion.data===evaluationResultToCheck.attempts);
-                                data = Translator.trans('condition_criterion_test_repetition', {activityRep:criterion.data, userRep:evaluationResultToCheck.attempts}, 'path_wizards');
+                                test=(evaluationResultToCheck.attempts >= criterion.data);
+                                if (test) {isok=Translator.trans('yes', {}, 'path_wizards');}
+                                data = Translator.trans('condition_criterion_test_repetition', {activityRep:criterion.data, userRep:evaluationResultToCheck.attempts}, 'path_wizards')+" : "+isok;
                                 break;
                             case"activitystatus":
+                                //TODO : improve test for the different case (failed, attempted, completed...)
                                 test=(criterion.data===evaluationResultToCheck.status);
-                                data = Translator.trans('condition_criterion_test_status', {activityStatus:criterion.data, userStatus:evaluationResultToCheck.status}, 'path_wizards');
+                                if (test) {isok=Translator.trans('yes', {}, 'path_wizards');}
+                                data = Translator.trans('condition_criterion_test_status', {activityStatus:criterion.data, userStatus:evaluationResultToCheck.status}, 'path_wizards')+" : "+isok;
                                 break;
                             case"usergroup":
-                                var usergroup = new Array();
-                                var group = new Array();
-                                var ug = PathService.getUseringroupData();
                                 var test_tmp;
-                                //to retrieve group names
-                                var g=PathService.getUsergroupData();
-                                if (angular.isObject(g)){
-                                    for (var k in g){
-                                        if (angular.isDefined(g[criterion.data])){
-                                            group.push(g[criterion.data]);
+                                //group names the user IS registered to
+                                var groupis = new Array();
+                                //group names the user SHOULD BE registered to
+                                var groupshould = new Array();
+                                //the groups the user is registered to
+                                var uig = PathService.getUseringroupData();
+                                //the groups available
+                                var ug=PathService.getUsergroupData();
+                                //to retrieve group names the user SHOULD BE registered to
+                                if (angular.isObject(ug)){
+                                    for (var k in ug){
+                                        if (angular.isDefined(ug[criterion.data])){
+                                            groupshould.push(ug[criterion.data]);
                                             break;
                                         }
                                     }
                                 }
-                                //to retrieve user group names
-                                for (var group in ug) {
-                                    usergroup.push(ug[group]);
-                                    test_tmp=(criterion.data===group);
-                                    if (test_tmp == true){test = true;}
+                                //to test user group names
+                                for (var g in uig) {
+                                    groupis.push(uig[g]);
+                                    test_tmp=(criterion.data===g);
+                                    if (test_tmp == true){test = true;isok=Translator.trans('yes', {}, 'path_wizards');}
                                 }
-                                data=Translator.trans('condition_criterion_test_usergroup', {activityGroup:criterion.data, userGroup:usergroup.join(",")}, 'path_wizards');
+                                if (groupis.length == 0){
+                                    data=Translator.trans('condition_criterion_test_usergroup_nogroup', {activityGroup:groupshould}, 'path_wizards')+" : "+isok;
+                                } else {
+                                    data=Translator.trans('condition_criterion_test_usergroup', {activityGroup:groupshould, userGroup:groupis.join(",")}, 'path_wizards')+" : "+isok;
+                                }
                                 break;
                             case"userteam":
-                                var userteam = new Array();
-                                var team = new Array();
-                                var ut = PathService.getUserinteamData();
                                 var test_tmp;
-                                //to retrieve team names
-                                var t=PathService.getUserteamData();
-                                if (angular.isObject(t)){
-                                    for (var k in t){
-                                        if (angular.isDefined(t[criterion.data])){
-                                            team.push(t[criterion.data]);
+                                //team names the user IS registered to
+                                var teamis = new Array();
+                                //team names the user SHOULD BE registered to
+                                var teamshould = new Array();
+                                //the teams the user is registered to
+                                var uit = PathService.getUserinteamData();
+                                //the teams available
+                                var ut=PathService.getUserteamData();
+                                //to retrieve team names the user SHOULD BE registered to
+                                if (angular.isObject(ut)){
+                                    for (var k in ut){
+                                        if (angular.isDefined(ut[criterion.data])){
+                                            teamshould.push(ut[criterion.data]);
                                             break;
                                         }
                                     }
                                 }
-                                //to retrieve user team names
-                                for (var team in ut) {
-                                    userteam.push(ut[team]);
-                                    test_tmp=(criterion.data===team);
-                                    if (test_tmp == true){test = true;}
+                                //to test user team names
+                                for (var t in uit) {
+                                    teamis.push(uit[t]);
+                                    test_tmp=(criterion.data===t);
+                                    if (test_tmp == true){test = true;Translator.trans('yes', {}, 'path_wizards');}
                                 }
-                                data=Translator.trans('condition_criterion_test_userteam', {activityTeam:criterion.data, userTeam:userteam.join(",")}, 'path_wizards');
+                                if (teamis.length == 0){
+                                    data=Translator.trans('condition_criterion_test_userteam_noteam', {activityTeam:teamshould}, 'path_wizards')+" : "+isok;
+                                } else {
+                                    data=Translator.trans('condition_criterion_test_userteam', {activityTeam:teamshould, userTeam:teamis.join(",")}, 'path_wizards')+" : "+isok;
+                                }
                                 break;
                             default:break;
                         }

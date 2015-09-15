@@ -67,6 +67,12 @@
                     useringroup = response;
                     deferred.resolve(response);
                 });
+            var userinteampromise = $http.get(Routing.generate('innova_path_criteria_teamsforuser', {}))
+                .success(function (response) {
+                    userinteam = response;
+                    deferred.resolve(response);
+                });
+            //userteampromise : different from above, because needs to pass the pathe_id parameter, not available here
             var userteampromise;
             return {
                 usergrouppromise:usergrouppromise,
@@ -78,7 +84,7 @@
                     $http
                         .get(Routing.generate('innova_path_criteria_teamsforws', params))
                         .success(function (response) {
-                            this.userteamlist = response;
+                            userteamlist = response;
                             deferred.resolve(response);
                         }.bind(this))
                         .error(function (response) {
