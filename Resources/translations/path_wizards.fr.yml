@@ -21,11 +21,11 @@ condition_criterion_type_activityrepetition: Répétition de l'activité
 condition_criterion_type_activitystatus: Status de l'activité
 condition_criterion_type_usergroup: Groupe d'utilisateur
 condition_criterion_type_userteam: Equipe d'utilisateur
+condition_criterion_type: Type de critère
 condition_criterion_activityrepetition: Nombre de fois où l'activité a été effectuée
 condition_criterion_activitystatus: Statut de l'activité
 condition_criterion_usergroup: Utilisateur appartient au groupe
 condition_criterion_userteam: Utilisateur appartient à l'équipe
-condition_criterion_type: Type de critère
 condition_delete_title: Suppression de la condition
 condition_delete_confirm: Attention, vous êtes sur le point de supprimer la condition. Sans condition, tous les utilisateurs pourront passer à l'étape suivante
 condition_delete: Supprimer

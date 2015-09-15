@@ -11,10 +11,12 @@ condition_criteria_group_add : Add a criteria group
 condition_criteria_group_delete : Delete criteria group
 condition_criterion_choice: Your choice
 condition_criterion_delete: Delete criterion
-condition_criterion_test_repetition: Activity must be tried %activityRep% times, now you tried it %userRep% times
-condition_criterion_test_status: Activity status must be %activityStatus%, now it is %userStatus%
-condition_criterion_test_usergroup : You have to belong to group %activityGroup%, now you belong to the group %userGroup%
-condition_criterion_test_userteam : You have to belong to team %activityTeam%, now you belong to the team %userTeam%
+condition_criterion_test_repetition: Activity must be tried <b>%activityRep%</b> times, now you tried it <b>%userRep%</b> times
+condition_criterion_test_status: Activity status must be <b>%activityStatus%</b>, now it is <b>%userStatus%</b>
+condition_criterion_test_usergroup : You have to belong to group <b>%activityGroup%</b>, now you belong to the group <b>%userGroup%</b>
+condition_criterion_test_usergroup_noteam : You have to belong to group <b>%activityGroup%</b>, now you belong to no team
+condition_criterion_test_userteam : You have to belong to team <b>%activityTeam%</b>, now you belong to the team <b>%userTeam%</b>
+condition_criterion_test_userteam_noteam : You have to belong to team <b>%activityTeam%</b>, now you belong to no team
 condition_criterion_type_activityrepetition: Activity repetition
 condition_criterion_type_activitystatus: Activity status
 condition_criterion_type_usergroup: User group
