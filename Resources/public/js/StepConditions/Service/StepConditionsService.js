@@ -242,7 +242,7 @@
                     if(angular.isDefined(evaluationResultToCheck)||criterion.type=="usergroup"){
                         switch(criterion.type){
                             case"activityrepetition":
-                                test=(evaluationResultToCheck.attempts >= criterion.data);
+                                test=(parseInt(evaluationResultToCheck.attempts) >= parseInt(criterion.data));
                                 if (test) {isok=Translator.trans('yes', {}, 'path_wizards');}
                                 data = Translator.trans('condition_criterion_test_repetition', {activityRep:criterion.data, userRep:evaluationResultToCheck.attempts}, 'path_wizards')+" : "+isok;
                                 break;

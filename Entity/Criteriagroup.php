@@ -54,6 +54,7 @@ class Criteriagroup implements \JsonSerializable
      * @var \Innova\PathBundle\Entity\StepCondition
      *
      * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\StepCondition", inversedBy="criteriagroups")
+     * @ORM\JoinColumn(name="step_condition_id", referencedColumnName="id")
      */
     protected $stepcondition;
 

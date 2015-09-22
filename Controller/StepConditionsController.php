@@ -132,7 +132,7 @@ class StepConditionsController extends Controller
     {
         $data = array(
             'status' => 'NA',
-            'attempts' => 'NA'
+            'attempts' => 0
         );
         //retrieve activity
         $this->activityRepo = $this->om->getRepository('ClarolineCoreBundle:Resource\Activity');
