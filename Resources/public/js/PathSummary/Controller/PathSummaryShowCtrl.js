@@ -38,8 +38,10 @@ PathSummaryShowCtrl.prototype.userProgression = {};
 PathSummaryShowCtrl.prototype.evaluation = null;
 
 PathSummaryShowCtrl.prototype.updateProgression = function (step, newStatus) {
+    //root step is authorized anyways
+    var authorized = (this.pathService.getRoot().id == step.id) ? 1 : 0;
     if (!angular.isObject(this.userProgression[step.id])) {
-        this.userProgressionService.create(step, newStatus);
+        this.userProgressionService.create(step, newStatus, authorized);
     } else {
         this.userProgressionService.update(step, newStatus);
     }

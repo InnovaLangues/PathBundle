@@ -19,8 +19,10 @@ var StepShowCtrl = function StepShowCtrl(step, inheritedResources, PathService, 
     // Update User progression if needed (e.g. if the User has never seen the Step, mark it as seen)
     this.progression = this.userProgressionService.getForStep(this.step);
     if (!angular.isObject(this.progression)) {
+        //root step is authorized anyways
+        var authorized = (this.pathService.getRoot().id == step.id) ? 1 : 0;
         // Create progression for User
-        this.progression = this.userProgressionService.create(step);
+        this.progression = this.userProgressionService.create(step, null, authorized);
     }
 
     return this;

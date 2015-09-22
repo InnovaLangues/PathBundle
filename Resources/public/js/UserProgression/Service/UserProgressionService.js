@@ -49,14 +49,17 @@
                 /**
                  * Create a new Progression for the Step
                  * @param step
+                 * @param authorized
                  * @param [status]
                  * @returns {object}
                  */
-                create: function create(step, status) {
+                create: function create(step, status, authorized) {
                     var deferred = $q.defer();
 
                     var params = { id: step.resourceId };
-
+                    if (typeof authorized !== 'undefined' && null !== authorized) {
+                        params.authorized = authorized;
+                    }
                     if (typeof status !== 'undefined' && null !== status && status.length !== 0) {
                         params.status = status;
                     }
