@@ -3,14 +3,6 @@
 {% block stylesheets %}
     {# Claroline CSS #}
     {{ parent() }}
-
-    {# Path Editor styles #}
-    {% stylesheets debug=false filter='lessphp, cssmin' output='vendor/innovapath/wizards.css'
-        '@InnovaAngularUITreeBundle/Resources/public/css/*'
-        '@InnovaPathBundle/Resources/public/less/wizards.less'
-    %}
-    <link rel="stylesheet" media="screen" href="{{ asset_url }}" />
-    {% endstylesheets %}
 {% endblock %}
 
 {% block content %}
