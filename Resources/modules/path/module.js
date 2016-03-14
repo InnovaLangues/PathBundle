@@ -1,3 +1,6 @@
+import PathEditCtrl from './Controller/PathEditCtrl'
+import PathShowCtrl from './Controller/PathShowCtrl'
+
 /**
  * Declares Editor and Player wizards
  */
@@ -22,8 +25,9 @@
         'PathNavigationModule',
         'PathModule',
         'StepModule',
-        'TemplateModule',
-        'UserProgressionModule'
+        /*'TemplateModule',*/
+        'UserProgressionModule',
+        'StepConditionsModule'
     ];
 
     // Resolve functions (it's the same between Editor and Player as we navigate in the same way in the 2 apps)
@@ -105,6 +109,27 @@
 
                 return inherited;
             }
+        ],
+        /**
+         * get return values of promises made in PathService to be available elsewhere
+         */
+        /**
+         * list of all user group in Claro
+         */
+        allgroups: [
+            'PathService',
+            function getAllgroups(PathService) {
+                return PathService.usergrouppromise;
+            }
+        ],
+        /**
+         * list of all evaluation statuses in Claro
+         */
+        conditionEvaluationStatuses: [
+            'PathService',
+            function getEvaluationStatuses(PathService) {
+                return PathService.evaluationstatusespromise;
+            }
         ]
     };
 
@@ -132,13 +157,13 @@
                 $routeProvider
                     .when('/', {
                         templateUrl: AngularApp.webDir + 'bundles/innovapath/js/Step/Partial/edit.html',
-                        controller: StepEditCtrl,
+                        controller: 'StepEditCtrl',
                         controllerAs: 'stepEditCtrl',
                         resolve: resolveRootFunctions
                     })
                     .when('/:stepId?', {
                         templateUrl: AngularApp.webDir + 'bundles/innovapath/js/Step/Partial/edit.html',
-                        controller: StepEditCtrl,
+                        controller: 'StepEditCtrl',
                         controllerAs: 'stepEditCtrl',
                         resolve: resolveFunctions
                     })
@@ -163,15 +188,39 @@
                 $routeProvider
                     .when('/', {
                         templateUrl: AngularApp.webDir + 'bundles/innovapath/js/Step/Partial/show.html',
-                        controller: StepShowCtrl,
+                        controller: 'StepShowCtrl',
                         controllerAs: 'stepShowCtrl',
-                        resolve: resolveRootFunctions
+                        resolve: angular.merge({
+                            // Always allow access to the Root step
+                            authorization: [
+                                function authorizationRootResolve() {
+                                    return { granted: true };
+                                }
+                            ]
+                        }, resolveRootFunctions)
                     })
                     .when('/:stepId?', {
                         templateUrl: AngularApp.webDir + 'bundles/innovapath/js/Step/Partial/show.html',
-                        controller: StepShowCtrl,
+                        controller: 'StepShowCtrl',
                         controllerAs: 'stepShowCtrl',
-                        resolve: resolveFunctions
+                        resolve: angular.merge({
+                            // Add authorization checker
+                            authorization: [
+                                '$route',
+                                'PathService',
+                                'AuthorizationCheckerService',
+                                function authorizationResolve($route, PathService, AuthorizationCheckerService) {
+                                    var authorization = false;
+
+                                    var step = PathService.getStep($route.current.params.stepId);
+                                    if (angular.isDefined(step) && angular.isObject(step)) {
+                                        authorization = AuthorizationCheckerService.isAuthorized(step);
+                                    }
+
+                                    return authorization;
+                                }
+                            ]
+                        }, resolveFunctions)
                     })
                     .otherwise({
                         redirectTo: '/:stepId?'
