@@ -9,7 +9,7 @@ export default class PathEditDirective {
         this.template = require('../Partial/edit.html')
         this.scope = {
             id        : '@', // ID of the path
-            path      : '@', // Data of the path
+            path      : '=', // Data of the path
             modified  : '@', // Is Path have pending modifications ?
             published : '@'  // Is path published ?
         }

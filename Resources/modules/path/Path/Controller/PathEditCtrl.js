@@ -2,13 +2,12 @@ import PathBaseCtrl from './PathBaseCtrl'
 
 export default class PathEditCtrl extends PathBaseCtrl {
     constructor($window, $route, $routeParams, PathService, HistoryService, ConfirmService, $scope) {
-        super($window, route, $routeParams, PathService)
+        super($window, $route, $routeParams, PathService)
         this.historyService = HistoryService
         this.confirmService = ConfirmService
-        this.$scope = this.$scope
-
-        this.modified = false
-        this.published = false
+        this.$scope = $scope
+        //this.modified = false
+        //this.published = false
         this.unsaved = false
         this.historyDisabled = {}
 
