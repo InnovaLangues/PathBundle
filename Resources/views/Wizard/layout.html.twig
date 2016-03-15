@@ -46,6 +46,8 @@
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
+    {# <script type="text/javascript" src="{{ hotAsset('dist/innova-path-path_base.js')}}"></script> #}
+
     {% javascripts debug=false filter='jsmin' output='vendor/innovapath/wizards.js'
         '@InnovaPathBundle/Resources/public/js/Utils/*'
         '@InnovaPathBundle/Resources/public/js/Utils/Filter/*'
@@ -68,10 +70,7 @@
         '@InnovaPathBundle/Resources/public/js/History/*'
         '@InnovaPathBundle/Resources/public/js/History/Service/*'
 
-        '@InnovaPathBundle/Resources/public/js/Path/*'
-        '@InnovaPathBundle/Resources/public/js/Path/Controller/*'
-        '@InnovaPathBundle/Resources/public/js/Path/Directive/*'
-        '@InnovaPathBundle/Resources/public/js/Path/Service/*'
+        'dist/innova-path-path_base.js'
 
         '@InnovaPathBundle/Resources/public/js/UserProgression/*'
         '@InnovaPathBundle/Resources/public/js/UserProgression/Service/*'
@@ -113,6 +112,7 @@
 
         '@InnovaPathBundle/Resources/public/js/wizards.app.js'
     %}
+
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
