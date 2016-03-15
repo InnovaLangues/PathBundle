@@ -9,8 +9,8 @@ export default class PathBaseCtrl {
          * ID of the current path
          * @type {number}
          */
-        this.id = null
-        this.path = {}
+        //this.id = null
+        //this.path = {}
         /**
          * Current step ID (used to generate edit and preview routes)
          */

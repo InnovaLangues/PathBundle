@@ -16,6 +16,7 @@ var PathSummaryBaseCtrl = function PathSummaryBaseCtrl($routeParams, PathService
         // Set the structure of the path
         this.structure = path.steps;
     }
+
     return this;
 };
 
@@ -41,7 +42,7 @@ PathSummaryBaseCtrl.prototype.title = null;
  * Structure of the current path
  * @type {object}
  */
-PathSummaryBaseCtrl.prototype.structure = {};
+PathSummaryBaseCtrl.prototype.structure = [];
 
 /**
  * Current displayed Step
