@@ -1,3 +1,9 @@
+WARNING
+-------
+
+**DEVELOPMENT HAS MOVED TO [claroline/Distribution](http://github.com/claroline/Distribution). 
+THIS REPOSITORY IS NO LONGER MAINTAINED.**
+
 # PathBundle
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/717ec409-89d6-483b-ad4e-26e1ddb5edbc/small.png)](https://insight.sensiolabs.com/projects/717ec409-89d6-483b-ad4e-26e1ddb5edbc)
